@@ -1,0 +1,15 @@
+{
+  "name": "@lazyapp-examples/setup",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Provision templates, flows, webhooks, conversation starters and QR links for every example.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@lazyapp-examples/demo-kit": "*",
+    "@lazyapp-examples/sdk": "*"
+  }
+}

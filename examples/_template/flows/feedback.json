@@ -1,0 +1,51 @@
+{
+  "version": "7.0",
+  "screens": [
+    {
+      "id": "RATE",
+      "title": "Rate the demo",
+      "terminal": true,
+      "success": true,
+      "data": {},
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextSubheading",
+            "text": "How was the LazyApp demo?"
+          },
+          {
+            "type": "RadioButtonsGroup",
+            "name": "rating",
+            "label": "Your rating",
+            "required": true,
+            "data-source": [
+              { "id": "5", "title": "Loved it" },
+              { "id": "4", "title": "Good" },
+              { "id": "3", "title": "It was OK" },
+              { "id": "2", "title": "Not for me" }
+            ]
+          },
+          {
+            "type": "TextArea",
+            "name": "comment",
+            "label": "Anything we should build next?",
+            "required": false,
+            "max-length": 500
+          },
+          {
+            "type": "Footer",
+            "label": "Send feedback",
+            "on-click-action": {
+              "name": "complete",
+              "payload": {
+                "rating": "${form.rating}",
+                "comment": "${form.comment}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

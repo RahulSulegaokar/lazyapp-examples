@@ -1,0 +1,31 @@
+# systemd unit for the LazyApp demo server.
+# Install: sudo cp deploy/lazyapp-demo.service /etc/systemd/system/ && sudo systemctl enable --now lazyapp-demo
+[Unit]
+Description=LazyApp examples demo server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lazyapp-demo
+Group=lazyapp-demo
+WorkingDirectory=/srv/lazyapp-examples
+EnvironmentFile=/srv/lazyapp-examples/.env
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=3
+# SIGTERM lets the server stop accepting, drain its queue and close SQLite.
+KillSignal=SIGTERM
+TimeoutStopSec=20
+
+# Hardening: the process only needs to write its database.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/srv/lazyapp-examples/data
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

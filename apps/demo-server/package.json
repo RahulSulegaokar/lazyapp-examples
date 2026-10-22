@@ -1,0 +1,18 @@
+{
+  "name": "@lazyapp-examples/demo-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Hono server that receives LazyApp webhooks and runs every example on one WhatsApp number.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.5",
+    "@lazyapp-examples/demo-kit": "*",
+    "@lazyapp-examples/sdk": "*",
+    "hono": "^4.13.13",
+    "zod": "^4.6.7"
+  }
+}

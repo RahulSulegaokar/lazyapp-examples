@@ -1,0 +1,40 @@
+{
+  "name": "lazyapp-examples",
+  "private": true,
+  "description": "Production-grade WhatsApp apps built on the LazyApp API",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "dev": "tsx watch --env-file-if-exists=.env apps/demo-server/src/main.ts",
+    "start": "tsx --env-file-if-exists=.env apps/demo-server/src/main.ts",
+    "setup": "tsx --env-file-if-exists=.env packages/setup/src/cli.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "check": "npm run lint && npm run typecheck && npm run test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.0.0",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^5.0.5"
+  },
+  "dependencies": {
+    "tsx": "^4.23.15"
+  }
+}

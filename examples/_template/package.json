@@ -1,0 +1,16 @@
+{
+  "name": "@lazyapp-examples/example-template",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minimal reference example: the pattern every LazyApp example follows.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@lazyapp-examples/demo-kit": "*",
+    "@lazyapp-examples/sdk": "*",
+    "zod": "^4.6.7"
+  }
+}
