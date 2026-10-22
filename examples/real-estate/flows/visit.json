@@ -1,0 +1,146 @@
+{
+  "version": "7.0",
+  "data_api_version": "3.0",
+  "routing_model": {
+    "SCHEDULE": []
+  },
+  "screens": [
+    {
+      "id": "SCHEDULE",
+      "title": "Book a site visit",
+      "terminal": true,
+      "success": true,
+      "data": {
+        "home": {
+          "type": "string",
+          "__example__": "Brickfield Aurora, Whitefield"
+        },
+        "address": {
+          "type": "string",
+          "__example__": "Hope Farm Junction, Whitefield, Bengaluru 560066"
+        },
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "2026-10-24",
+              "title": "Sat, 24 Oct"
+            }
+          ]
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "11:30",
+              "title": "11:30 AM"
+            }
+          ]
+        },
+        "slots_visible": {
+          "type": "boolean",
+          "__example__": true
+        },
+        "name": {
+          "type": "string",
+          "__example__": "Asha"
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextSubheading",
+            "text": "${data.home}"
+          },
+          {
+            "type": "TextCaption",
+            "text": "${data.address}"
+          },
+          {
+            "type": "Dropdown",
+            "name": "day",
+            "label": "Day",
+            "required": true,
+            "data-source": "${data.days}",
+            "on-select-action": {
+              "name": "data_exchange",
+              "payload": {
+                "trigger": "day",
+                "day": "${form.day}"
+              }
+            }
+          },
+          {
+            "type": "RadioButtonsGroup",
+            "name": "time",
+            "label": "Time",
+            "required": true,
+            "visible": "${data.slots_visible}",
+            "data-source": "${data.slots}"
+          },
+          {
+            "type": "TextInput",
+            "name": "name",
+            "label": "Your name",
+            "input-type": "text",
+            "required": true,
+            "init-value": "${data.name}"
+          },
+          {
+            "type": "RadioButtonsGroup",
+            "name": "party",
+            "label": "Who is coming?",
+            "required": true,
+            "data-source": [
+              {
+                "id": "solo",
+                "title": "Just me"
+              },
+              {
+                "id": "family",
+                "title": "With family"
+              }
+            ]
+          },
+          {
+            "type": "Footer",
+            "label": "Confirm visit",
+            "on-click-action": {
+              "name": "data_exchange",
+              "payload": {
+                "trigger": "confirm",
+                "day": "${form.day}",
+                "time": "${form.time}",
+                "name": "${form.name}",
+                "party": "${form.party}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

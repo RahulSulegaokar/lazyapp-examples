@@ -299,12 +299,16 @@ export class ContactsResource extends Resource {
     return this.request<Contact>('POST', '/v1/contacts', { body: input, ...options });
   }
 
-  addTags(contact: string, tags: readonly string[]): Promise<Contact> {
-    return this.request<Contact>('POST', `/v1/contacts/${enc(contact)}/tags`, { body: { tags } });
+  /** Attaches tags by name (created on first use) or uuid. Additive: existing tags stay. */
+  addTags(contact: string, tags: readonly string[], options?: WriteOptions): Promise<Contact> {
+    return this.request<Contact>('POST', `/v1/contacts/${enc(contact)}/tags`, { body: { tags }, ...options });
   }
 
-  removeTags(contact: string, tags: readonly string[]): Promise<undefined> {
-    return this.request<undefined>('DELETE', `/v1/contacts/${enc(contact)}/tags`, { body: { tags } });
+  removeTags(contact: string, tags: readonly string[], options?: WriteOptions): Promise<undefined> {
+    return this.request<undefined>('DELETE', `/v1/contacts/${enc(contact)}/tags`, {
+      body: { tags },
+      ...options,
+    });
   }
 
   recordConsent(contact: string, input: ConsentInput, options?: WriteOptions): Promise<unknown> {

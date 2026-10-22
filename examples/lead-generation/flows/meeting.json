@@ -1,0 +1,124 @@
+{
+  "version": "7.0",
+  "data_api_version": "3.0",
+  "routing_model": {
+    "SLOT": []
+  },
+  "screens": [
+    {
+      "id": "SLOT",
+      "title": "Book your demo",
+      "terminal": true,
+      "success": true,
+      "data": {
+        "rep_line": {
+          "type": "string",
+          "__example__": "30 minutes with Ananya Iyer, Account executive"
+        },
+        "context_line": {
+          "type": "string",
+          "__example__": "We will tailor it to: GST invoicing, E-way bills"
+        },
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "2026-10-26",
+              "title": "Mon, 26 Oct"
+            }
+          ]
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "11:30",
+              "title": "11:30 AM"
+            }
+          ]
+        },
+        "slots_visible": {
+          "type": "boolean",
+          "__example__": true
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextSubheading",
+            "text": "${data.rep_line}"
+          },
+          {
+            "type": "TextCaption",
+            "text": "${data.context_line}"
+          },
+          {
+            "type": "Dropdown",
+            "name": "day",
+            "label": "Day",
+            "required": true,
+            "data-source": "${data.days}",
+            "on-select-action": {
+              "name": "data_exchange",
+              "payload": {
+                "trigger": "day",
+                "day": "${form.day}"
+              }
+            }
+          },
+          {
+            "type": "RadioButtonsGroup",
+            "name": "time",
+            "label": "Time (IST)",
+            "required": true,
+            "visible": "${data.slots_visible}",
+            "data-source": "${data.slots}"
+          },
+          {
+            "type": "TextArea",
+            "name": "agenda",
+            "label": "Anything we should prepare?",
+            "required": false,
+            "max-length": 300
+          },
+          {
+            "type": "Footer",
+            "label": "Book demo",
+            "on-click-action": {
+              "name": "data_exchange",
+              "payload": {
+                "trigger": "confirm",
+                "day": "${form.day}",
+                "time": "${form.time}",
+                "agenda": "${form.agenda}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

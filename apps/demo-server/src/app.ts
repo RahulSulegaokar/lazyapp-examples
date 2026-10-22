@@ -1,7 +1,18 @@
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { WEBHOOK_HEADERS } from '@lazyapp-examples/sdk';
+import { DEFAULT_EXAMPLES_DIR, PUBLIC_ASSET_PATTERN } from '@lazyapp-examples/demo-kit';
 import type { AnyExample, DemoRuntime, Logger } from '@lazyapp-examples/demo-kit';
+
+const ASSET_TYPES: Readonly<Record<string, string>> = {
+  pdf: 'application/pdf',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+  webp: 'image/webp',
+};
 
 export interface AppOptions {
   readonly runtime: DemoRuntime;
@@ -12,6 +23,8 @@ export interface AppOptions {
   readonly startedAt?: Date | undefined;
   /** Reports whether the store answers; `/healthz` returns 503 when it does not. */
   readonly checkStore?: (() => boolean) | undefined;
+  /** Where `examples/<id>/public/` live, for `/public/:example/:file`. Default: this repository's `examples/`. */
+  readonly examplesDir?: string | undefined;
 }
 
 /**
@@ -116,6 +129,35 @@ export function createApp(options: AppOptions): Hono {
       },
       storeOk ? 200 : 503,
     );
+  });
+
+  /**
+   * Media the examples send by URL (brochures, guides). Only flat files in a registered
+   * example's `public/` directory with a known type; WhatsApp caches them, so do we.
+   */
+  app.get('/public/:example/:file', async (c) => {
+    const exampleId = c.req.param('example');
+    const file = c.req.param('file');
+    const extension = file.split('.').pop() ?? '';
+    const type = ASSET_TYPES[extension];
+    if (
+      !options.examples.some((example) => example.id === exampleId) ||
+      !PUBLIC_ASSET_PATTERN.test(file) ||
+      type === undefined
+    ) {
+      return c.json({ error: 'Not found' }, 404);
+    }
+    try {
+      const body = await readFile(
+        join(options.examplesDir ?? DEFAULT_EXAMPLES_DIR, exampleId, 'public', file),
+      );
+      return new Response(body, {
+        status: 200,
+        headers: { 'content-type': type, 'cache-control': 'public, max-age=86400' },
+      });
+    } catch {
+      return c.json({ error: 'Not found' }, 404);
+    }
   });
 
   /** Public catalogue of demos (for the website's examples page). */

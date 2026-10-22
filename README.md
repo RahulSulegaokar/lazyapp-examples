@@ -10,12 +10,14 @@ Every example runs on one shared WhatsApp number behind one small server, and ev
 
 <!-- examples:start -->
 
-| Demo                                            | Start code     | What it shows                                                                                                                                                |
-| ----------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [Hello LazyApp](examples/_template) (reference) | `DEMO HELLO`   | Reply buttons, lists, reactions, location request, a WhatsApp Flow, follow-ups                                                                               |
-| [Halo Home Care](examples/support-desk)         | `DEMO SUPPORT` | Support desk: FAQ lists, order tracking, tickets with photos, SLA routing to agents in business hours, escalation, CSAT Flow, reopen, inbox pinning          |
-| [Login with WhatsApp](examples/otp-login)       | `DEMO OTP`     | Authentication templates (copy code, one-tap), managed OTP send/verify in chat and on a web sign-in page, sign-in alerts from `otp.*` webhooks, fraud guards |
-| [LazyApp Events](examples/event-tickets)        | `DEMO EVENTS`  | Media carousel, attendee Flow with live pricing, India payments with seat holds, QR tickets (PNG + PDF), reminders with a map, web check-in, waitlist        |
+| Demo                                              | Start code     | What it shows                                                                                                                                                                                         |
+| ------------------------------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Hello LazyApp](examples/_template) (reference)   | `DEMO HELLO`   | Reply buttons, lists, reactions, location request, a WhatsApp Flow, follow-ups                                                                                                                        |
+| [Halo Home Care](examples/support-desk)           | `DEMO SUPPORT` | Support desk: FAQ lists, order tracking, tickets with photos, SLA routing to agents in business hours, escalation, CSAT Flow, reopen, inbox pinning                                                   |
+| [Login with WhatsApp](examples/otp-login)         | `DEMO OTP`     | Authentication templates (copy code, one-tap), managed OTP send/verify in chat and on a web sign-in page, sign-in alerts from `otp.*` webhooks, fraud guards                                          |
+| [LazyApp Events](examples/event-tickets)          | `DEMO EVENTS`  | Media carousel, attendee Flow with live pricing, India payments with seat holds, QR tickets (PNG + PDF), reminders with a map, web check-in, waitlist                                                 |
+| [Brickfield Homes](examples/real-estate)          | `DEMO HOMES`   | Property search to site visit: data-exchange Flows (preferences, EMI, slot booking), media carousel, brochure PDF, location, agent contact card, location-header template, reminders, lead-score tags |
+| [Ledgerly lead machine](examples/lead-generation) | `DEMO LEADS`   | Ad/QR attribution, qualification Flow, scoring with reasons, signed CRM webhook, rep calendar Flow, consented nurture with a coupon template, every opt-out path                                      |
 
 <!-- examples:end -->
 

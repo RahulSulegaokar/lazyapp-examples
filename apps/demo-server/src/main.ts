@@ -60,6 +60,7 @@ async function main(): Promise<void> {
     log,
     examples,
     demoPhoneNumber: config.DEMO_PHONE_NUMBER,
+    examplesDir: config.EXAMPLES_DIR,
     checkStore: () => {
       try {
         store.countSessions();

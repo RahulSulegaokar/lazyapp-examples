@@ -1,0 +1,213 @@
+{
+  "version": "7.0",
+  "data_api_version": "3.0",
+  "routing_model": {
+    "LOAN": ["RESULT"],
+    "RESULT": []
+  },
+  "screens": [
+    {
+      "id": "LOAN",
+      "title": "EMI calculator",
+      "data": {
+        "home": {
+          "type": "string",
+          "__example__": "Brickfield Aurora, Whitefield"
+        },
+        "price_line": {
+          "type": "string",
+          "__example__": "Price ₹92 L · typical loan ₹73.6 L (80%)"
+        },
+        "loan_amount": {
+          "type": "string",
+          "__example__": "7360000"
+        },
+        "tenures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "20",
+              "title": "20 years"
+            }
+          ]
+        },
+        "rates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "8.50",
+              "title": "8.50% p.a."
+            }
+          ]
+        },
+        "tenure": {
+          "type": "string",
+          "__example__": "20"
+        },
+        "rate": {
+          "type": "string",
+          "__example__": "8.50"
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextSubheading",
+            "text": "${data.home}"
+          },
+          {
+            "type": "TextBody",
+            "text": "${data.price_line}"
+          },
+          {
+            "type": "TextInput",
+            "name": "loan_amount",
+            "label": "Loan amount (₹)",
+            "input-type": "number",
+            "required": true,
+            "init-value": "${data.loan_amount}",
+            "helper-text": "Between ₹5 lakh and ₹20 crore"
+          },
+          {
+            "type": "Dropdown",
+            "name": "tenure",
+            "label": "Tenure",
+            "required": true,
+            "data-source": "${data.tenures}",
+            "init-value": "${data.tenure}"
+          },
+          {
+            "type": "Dropdown",
+            "name": "rate",
+            "label": "Interest rate",
+            "required": true,
+            "data-source": "${data.rates}",
+            "init-value": "${data.rate}"
+          },
+          {
+            "type": "Footer",
+            "label": "Calculate EMI",
+            "on-click-action": {
+              "name": "data_exchange",
+              "payload": {
+                "loan_amount": "${form.loan_amount}",
+                "tenure": "${form.tenure}",
+                "rate": "${form.rate}"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "RESULT",
+      "title": "Your EMI",
+      "terminal": true,
+      "success": true,
+      "data": {
+        "emi_line": {
+          "type": "string",
+          "__example__": "₹63,900 per month"
+        },
+        "loan_line": {
+          "type": "string",
+          "__example__": "Loan ₹73,60,000 for 20 years at 8.5%"
+        },
+        "interest_line": {
+          "type": "string",
+          "__example__": "Total interest ₹79,76,000"
+        },
+        "total_line": {
+          "type": "string",
+          "__example__": "Total repayment ₹1,53,36,000"
+        },
+        "income_line": {
+          "type": "string",
+          "__example__": "Lenders look for a take-home of about ₹1,28,000 a month."
+        },
+        "loan_amount": {
+          "type": "string",
+          "__example__": "7360000"
+        },
+        "tenure": {
+          "type": "string",
+          "__example__": "20"
+        },
+        "rate": {
+          "type": "string",
+          "__example__": "8.50"
+        },
+        "emi": {
+          "type": "string",
+          "__example__": "6390000"
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextHeading",
+            "text": "${data.emi_line}"
+          },
+          {
+            "type": "TextBody",
+            "text": "${data.loan_line}"
+          },
+          {
+            "type": "TextBody",
+            "text": "${data.interest_line}"
+          },
+          {
+            "type": "TextBody",
+            "text": "${data.total_line}"
+          },
+          {
+            "type": "TextCaption",
+            "text": "${data.income_line}"
+          },
+          {
+            "type": "TextCaption",
+            "text": "Indicative only. Your lender confirms the final rate and eligibility."
+          },
+          {
+            "type": "Footer",
+            "label": "Send to chat",
+            "on-click-action": {
+              "name": "complete",
+              "payload": {
+                "flow": "emi",
+                "loan_amount": "${data.loan_amount}",
+                "tenure": "${data.tenure}",
+                "rate": "${data.rate}",
+                "emi": "${data.emi}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

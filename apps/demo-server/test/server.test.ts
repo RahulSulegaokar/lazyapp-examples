@@ -152,6 +152,33 @@ describe('demo server', () => {
   });
 });
 
+describe('public assets', () => {
+  it("serves files from a registered example's public/ directory, and nothing else", async () => {
+    const { app, store } = await build();
+    try {
+      const pdf = await app.request('/public/real-estate/brickfield-aurora.pdf');
+      expect(pdf.status).toBe(200);
+      expect(pdf.headers.get('content-type')).toBe('application/pdf');
+      expect(
+        Buffer.from(await pdf.arrayBuffer())
+          .subarray(0, 5)
+          .toString(),
+      ).toBe('%PDF-');
+
+      for (const path of [
+        '/public/real-estate/missing.pdf',
+        '/public/real-estate/%2E%2E%2Fpackage.json',
+        '/public/real-estate/package.json',
+        '/public/unknown-example/brickfield-aurora.pdf',
+      ]) {
+        expect((await app.request(path)).status).toBe(404);
+      }
+    } finally {
+      store.close();
+    }
+  });
+});
+
 describe('loadConfig', () => {
   const base = { LAZYAPP_API_KEY: 'sk_live_abc', LAZYAPP_WEBHOOK_SECRET: 'whsec_0123456789abcdef' };
 

@@ -1,0 +1,222 @@
+{
+  "version": "7.0",
+  "data_api_version": "3.0",
+  "routing_model": {
+    "PREFERENCES": []
+  },
+  "screens": [
+    {
+      "id": "PREFERENCES",
+      "title": "Find your home",
+      "terminal": true,
+      "success": true,
+      "data": {
+        "purposes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "buy",
+              "title": "Buy"
+            },
+            {
+              "id": "rent",
+              "title": "Rent"
+            }
+          ]
+        },
+        "cities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "bengaluru",
+              "title": "Bengaluru"
+            }
+          ]
+        },
+        "localities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "any",
+              "title": "Anywhere in the city"
+            },
+            {
+              "id": "Whitefield",
+              "title": "Whitefield"
+            }
+          ]
+        },
+        "budgets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "any",
+              "title": "Any budget"
+            },
+            {
+              "id": "buy-150",
+              "title": "₹75 L – ₹1.5 Cr"
+            }
+          ]
+        },
+        "bedrooms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "1",
+              "title": "1 BHK"
+            },
+            {
+              "id": "2",
+              "title": "2 BHK"
+            },
+            {
+              "id": "3",
+              "title": "3 BHK"
+            },
+            {
+              "id": "4",
+              "title": "4+ BHK"
+            }
+          ]
+        },
+        "intro": {
+          "type": "string",
+          "__example__": "Tell us what you are looking for. Localities and budgets update as you pick."
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextBody",
+            "text": "${data.intro}"
+          },
+          {
+            "type": "RadioButtonsGroup",
+            "name": "purpose",
+            "label": "I want to",
+            "required": true,
+            "data-source": "${data.purposes}",
+            "on-select-action": {
+              "name": "data_exchange",
+              "payload": {
+                "trigger": "purpose",
+                "purpose": "${form.purpose}",
+                "city": "${form.city}"
+              }
+            }
+          },
+          {
+            "type": "Dropdown",
+            "name": "city",
+            "label": "City",
+            "required": true,
+            "data-source": "${data.cities}",
+            "on-select-action": {
+              "name": "data_exchange",
+              "payload": {
+                "trigger": "city",
+                "purpose": "${form.purpose}",
+                "city": "${form.city}"
+              }
+            }
+          },
+          {
+            "type": "Dropdown",
+            "name": "locality",
+            "label": "Locality",
+            "required": false,
+            "data-source": "${data.localities}"
+          },
+          {
+            "type": "Dropdown",
+            "name": "budget",
+            "label": "Budget",
+            "required": false,
+            "data-source": "${data.budgets}"
+          },
+          {
+            "type": "ChipsSelector",
+            "name": "bedrooms",
+            "label": "Bedrooms",
+            "description": "Pick any that work",
+            "data-source": "${data.bedrooms}",
+            "max-selected-items": 4,
+            "required": false
+          },
+          {
+            "type": "Footer",
+            "label": "Show homes",
+            "on-click-action": {
+              "name": "complete",
+              "payload": {
+                "flow": "search",
+                "purpose": "${form.purpose}",
+                "city": "${form.city}",
+                "locality": "${form.locality}",
+                "budget": "${form.budget}",
+                "bedrooms": "${form.bedrooms}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [7 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Title (The GST invoicing checklist) /Producer (lazyapp-examples) >>
+endobj
+6 0 obj
+<< /Length 3880 >>
+stream
+0.160 0.270 0.620 rg
+0 710 595 132 re f
+BT 1.000 1.000 1.000 rg /F2 26 Tf 56.0 772.0 Td (The GST invoicing checklist) Tj ET
+BT 0.920 0.960 0.950 rg /F1 12 Tf 56.0 744.0 Td (A 5-minute guide for Indian small businesses - Ledgerly) Tj ET
+BT 0.420 0.450 0.500 rg /F1 8 Tf 56.0 32.0 Td (Ledgerly is a fictional product in the LazyApp WhatsApp demo. General information, not tax advice.) Tj ET
+BT 0.160 0.270 0.620 rg /F2 15 Tf 56.0 664.0 Td (1. Get every invoice right) Tj ET
+0.160 0.270 0.620 rg
+57 644 4 4 re f
+BT 0.130 0.150 0.180 rg /F1 11 Tf 72.0 642.0 Td (Supplier and buyer GSTIN, a unique serial number per financial year, and the place of supply.) Tj ET
+0.160 0.270 0.620 rg
+57 628 4 4 re f
+BT 0.130 0.150 0.180 rg /F1 11 Tf 72.0 626.0 Td (HSN or SAC codes on every line, with the right digits for your turnover.) Tj ET
+0.160 0.270 0.620 rg
+57 612 4 4 re f
+BT 0.130 0.150 0.180 rg /F1 11 Tf 72.0 610.0 Td (CGST and SGST for sales within your state, IGST across states.) Tj ET
+BT 0.160 0.270 0.620 rg /F2 15 Tf 56.0 576.0 Td (2. Know when e-invoicing applies) Tj ET
+BT 0.130 0.150 0.180 rg /F1 11 Tf 56.0 554.0 Td (Businesses above the notified turnover threshold must report B2B invoices to the Invoice) Tj ET
+BT 0.130 0.150 0.180 rg /F1 11 Tf 56.0 538.0 Td (Registration Portal and print the IRN and QR code on the invoice. Check the current threshold) Tj ET
+BT 0.130 0.150 0.180 rg /F1 11 Tf 56.0 522.0 Td (every April: it has only ever come down.) Tj ET
+BT 0.160 0.270 0.620 rg /F2 15 Tf 56.0 488.0 Td (3. Generate e-way bills from the invoice) Tj ET
+BT 0.130 0.150 0.180 rg /F1 11 Tf 56.0 466.0 Td (Goods worth more than the e-way bill limit need one before they move. Creating it from the invoice) Tj ET
+BT 0.130 0.150 0.180 rg /F1 11 Tf 56.0 450.0 Td (data avoids retyping, and the vehicle number can be added later.) Tj ET
+BT 0.160 0.270 0.620 rg /F2 15 Tf 56.0 416.0 Td (4. Reconcile with GSTR-2B every month) Tj ET
+0.160 0.270 0.620 rg
+57 396 4 4 re f
+BT 0.130 0.150 0.180 rg /F1 11 Tf 72.0 394.0 Td (Download GSTR-2B after the 14th and match it against your purchase register.) Tj ET
+0.160 0.270 0.620 rg
+57 380 4 4 re f
+BT 0.130 0.150 0.180 rg /F1 11 Tf 72.0 378.0 Td (Chase suppliers for invoices they have not uploaded before you file GSTR-3B.) Tj ET
+0.160 0.270 0.620 rg
+57 364 4 4 re f
+BT 0.130 0.150 0.180 rg /F1 11 Tf 72.0 362.0 Td (Input tax credit you do not claim on time is lost for good.) Tj ET
+BT 0.160 0.270 0.620 rg /F2 15 Tf 56.0 328.0 Td (5. Collect faster) Tj ET
+BT 0.130 0.150 0.180 rg /F1 11 Tf 56.0 306.0 Td (Send the invoice with a UPI payment link on WhatsApp and a polite reminder three days before the) Tj ET
+BT 0.130 0.150 0.180 rg /F1 11 Tf 56.0 290.0 Td (due date.) Tj ET
+BT 0.160 0.270 0.620 rg /F2 15 Tf 56.0 256.0 Td (Where Ledgerly fits) Tj ET
+0.950 0.970 0.960 rg
+56 208 483 40 re f
+BT 0.420 0.450 0.500 rg /F1 11 Tf 64.0 234.0 Td (Starter) Tj ET
+BT 0.130 0.150 0.180 rg /F2 11 Tf 249.2 234.0 Td (Rs. 799/month: 1 GSTIN, 2 users, unlimited GST) Tj ET
+BT 0.130 0.150 0.180 rg /F2 11 Tf 249.2 219.0 Td (invoices and e-way bills) Tj ET
+BT 0.420 0.450 0.500 rg /F1 11 Tf 64.0 194.0 Td (Growth) Tj ET
+BT 0.130 0.150 0.180 rg /F2 11 Tf 249.2 194.0 Td (Rs. 1,999/month: e-invoicing, inventory, GSTR-2B) Tj ET
+BT 0.130 0.150 0.180 rg /F2 11 Tf 249.2 179.0 Td (reconciliation and UPI collections for up to 10 users) Tj ET
+0.950 0.970 0.960 rg
+56 113 483 55 re f
+BT 0.420 0.450 0.500 rg /F1 11 Tf 64.0 154.0 Td (Enterprise) Tj ET
+BT 0.130 0.150 0.180 rg /F2 11 Tf 249.2 154.0 Td (Custom pricing: multiple GSTINs, Tally migration,) Tj ET
+BT 0.130 0.150 0.180 rg /F2 11 Tf 249.2 139.0 Td (approvals and SSO, with a dedicated success) Tj ET
+BT 0.130 0.150 0.180 rg /F2 11 Tf 249.2 124.0 Td (manager) Tj ET
+BT 0.420 0.450 0.500 rg /F1 9 Tf 56.0 89.0 Td (Thresholds and limits change; confirm them on the GST portal before you rely on them.) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000212 00000 n 
+0000000314 00000 n 
+0000000401 00000 n 
+0000004333 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R /Info 5 0 R >>
+startxref
+4469
+%%EOF

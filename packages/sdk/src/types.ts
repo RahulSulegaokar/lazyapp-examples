@@ -391,13 +391,19 @@ export interface Capability {
 
 // --- Events, OTP -------------------------------------------------------------
 
+/**
+ * Body of `POST /v1/events`. LazyApp resolves the event type to the workspace's mapped template
+ * and sends it, so an event without a mapping is refused (422).
+ */
 export interface SendEventInput {
   readonly type: string;
-  /** By phone (`recipient.phone_number`, required for that type) or by contact uuid (`recipient.value`). */
+  /** By phone (`{ phone_number }`) or by LazyApp contact (`{ type: 'contact_id', value }`). */
   readonly recipient:
     | { readonly type?: 'phone_number'; readonly phone_number: string }
     | { readonly type: 'contact_id'; readonly value: string };
   readonly properties?: Readonly<Record<string, unknown>>;
+  /** Permanent (not 24h) deduplication: one business event, one message. */
+  readonly idempotency_key?: string;
 }
 
 export interface SendOtpInput {

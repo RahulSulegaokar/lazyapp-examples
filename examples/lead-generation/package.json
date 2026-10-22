@@ -1,0 +1,19 @@
+{
+  "name": "@lazyapp-examples/example-lead-generation",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lead generation on WhatsApp: ad attribution, qualification Flow, scoring and tags, CRM alerts, meeting booking and consented nurture.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "assets": "tsx src/assets.ts"
+  },
+  "dependencies": {
+    "@lazyapp-examples/demo-kit": "*",
+    "@lazyapp-examples/sdk": "*",
+    "zod": "^4.6.7"
+  }
+}

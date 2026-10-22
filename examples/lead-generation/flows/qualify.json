@@ -1,0 +1,237 @@
+{
+  "version": "7.0",
+  "screens": [
+    {
+      "id": "NEEDS",
+      "title": "About your business",
+      "data": {},
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextSubheading",
+            "text": "What should Ledgerly take off your plate?"
+          },
+          {
+            "type": "CheckboxGroup",
+            "name": "needs",
+            "label": "Pick all that apply",
+            "required": true,
+            "min-selected-items": 1,
+            "data-source": [
+              {
+                "id": "gst-billing",
+                "title": "GST invoicing & e-invoices"
+              },
+              {
+                "id": "eway",
+                "title": "E-way bills"
+              },
+              {
+                "id": "inventory",
+                "title": "Inventory & stock"
+              },
+              {
+                "id": "recon",
+                "title": "GSTR-2B reconciliation"
+              },
+              {
+                "id": "collections",
+                "title": "UPI collections & reminders"
+              },
+              {
+                "id": "multi-gstin",
+                "title": "Multiple branches / GSTINs"
+              }
+            ]
+          },
+          {
+            "type": "Dropdown",
+            "name": "size",
+            "label": "Team size",
+            "required": true,
+            "data-source": [
+              {
+                "id": "1-10",
+                "title": "1–10 people"
+              },
+              {
+                "id": "11-50",
+                "title": "11–50 people"
+              },
+              {
+                "id": "51-200",
+                "title": "51–200 people"
+              },
+              {
+                "id": "201+",
+                "title": "201+ people"
+              }
+            ]
+          },
+          {
+            "type": "Dropdown",
+            "name": "role",
+            "label": "Your role",
+            "required": true,
+            "data-source": [
+              {
+                "id": "owner",
+                "title": "Owner or founder"
+              },
+              {
+                "id": "finance",
+                "title": "Finance or accounts"
+              },
+              {
+                "id": "ops",
+                "title": "Operations"
+              },
+              {
+                "id": "other",
+                "title": "Something else"
+              }
+            ]
+          },
+          {
+            "type": "TextInput",
+            "name": "company",
+            "label": "Company name",
+            "input-type": "text",
+            "required": false
+          },
+          {
+            "type": "Footer",
+            "label": "Continue",
+            "on-click-action": {
+              "name": "navigate",
+              "next": {
+                "type": "screen",
+                "name": "PLAN"
+              },
+              "payload": {
+                "needs": "${form.needs}",
+                "size": "${form.size}",
+                "role": "${form.role}",
+                "company": "${form.company}"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PLAN",
+      "title": "Budget and timing",
+      "terminal": true,
+      "success": true,
+      "data": {
+        "needs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": ["gst-billing"]
+        },
+        "size": {
+          "type": "string",
+          "__example__": "11-50"
+        },
+        "role": {
+          "type": "string",
+          "__example__": "owner"
+        },
+        "company": {
+          "type": "string",
+          "__example__": "Sharma Traders"
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "RadioButtonsGroup",
+            "name": "budget",
+            "label": "Monthly budget for billing software",
+            "required": true,
+            "data-source": [
+              {
+                "id": "lt1k",
+                "title": "Under ₹1,000 a month"
+              },
+              {
+                "id": "1k-3k",
+                "title": "₹1,000 – ₹3,000 a month"
+              },
+              {
+                "id": "3k-10k",
+                "title": "₹3,000 – ₹10,000 a month"
+              },
+              {
+                "id": "10k+",
+                "title": "Above ₹10,000 a month"
+              },
+              {
+                "id": "unsure",
+                "title": "Not sure yet"
+              }
+            ]
+          },
+          {
+            "type": "RadioButtonsGroup",
+            "name": "timeline",
+            "label": "When do you want to switch?",
+            "required": true,
+            "data-source": [
+              {
+                "id": "now",
+                "title": "This month"
+              },
+              {
+                "id": "1-3m",
+                "title": "In 1–3 months"
+              },
+              {
+                "id": "3-6m",
+                "title": "In 3–6 months"
+              },
+              {
+                "id": "exploring",
+                "title": "Just exploring"
+              }
+            ]
+          },
+          {
+            "type": "TextInput",
+            "name": "email",
+            "label": "Work email (optional)",
+            "input-type": "email",
+            "required": false,
+            "helper-text": "For the demo invite and the GST guide"
+          },
+          {
+            "type": "TextCaption",
+            "text": "We use your answers to prepare your demo. Nothing is shared outside Ledgerly."
+          },
+          {
+            "type": "Footer",
+            "label": "Submit",
+            "on-click-action": {
+              "name": "complete",
+              "payload": {
+                "flow": "qualify",
+                "needs": "${data.needs}",
+                "size": "${data.size}",
+                "role": "${data.role}",
+                "company": "${data.company}",
+                "budget": "${form.budget}",
+                "timeline": "${form.timeline}",
+                "email": "${form.email}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
