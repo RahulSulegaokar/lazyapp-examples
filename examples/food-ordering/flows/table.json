@@ -1,0 +1,175 @@
+{
+  "version": "7.0",
+  "data_api_version": "3.0",
+  "routing_model": {
+    "BOOK": ["SLOTS"],
+    "SLOTS": []
+  },
+  "screens": [
+    {
+      "id": "BOOK",
+      "title": "Book a table",
+      "data": {
+        "outlets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          },
+          "__example__": [
+            { "id": "indiranagar", "title": "Indiranagar", "description": "80 Feet Road, HAL 2nd Stage" }
+          ]
+        },
+        "dates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": { "id": { "type": "string" }, "title": { "type": "string" } }
+          },
+          "__example__": [{ "id": "2026-10-24", "title": "Tomorrow, Sat 24 Oct" }]
+        },
+        "parties": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": { "id": { "type": "string" }, "title": { "type": "string" } }
+          },
+          "__example__": [{ "id": "2", "title": "2 guests" }]
+        },
+        "error": { "type": "string", "__example__": "" },
+        "has_error": { "type": "boolean", "__example__": false }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          { "type": "TextSubheading", "text": "Dine in at Masala Mile" },
+          { "type": "TextCaption", "text": "${data.error}", "visible": "${data.has_error}" },
+          {
+            "type": "Dropdown",
+            "name": "outlet",
+            "label": "Restaurant",
+            "required": true,
+            "data-source": "${data.outlets}"
+          },
+          {
+            "type": "Dropdown",
+            "name": "date",
+            "label": "Date",
+            "required": true,
+            "data-source": "${data.dates}"
+          },
+          {
+            "type": "Dropdown",
+            "name": "party",
+            "label": "Guests",
+            "required": true,
+            "data-source": "${data.parties}"
+          },
+          {
+            "type": "Footer",
+            "label": "Check availability",
+            "on-click-action": {
+              "name": "data_exchange",
+              "payload": {
+                "step": "availability",
+                "outlet": "${form.outlet}",
+                "date": "${form.date}",
+                "party": "${form.party}"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "SLOTS",
+      "title": "Pick a time",
+      "terminal": true,
+      "success": true,
+      "data": {
+        "summary": { "type": "string", "__example__": "Indiranagar · Tomorrow, Sat 24 Oct · 4 guests" },
+        "times": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          },
+          "__example__": [{ "id": "19:30", "title": "7:30 pm", "description": "Dinner" }]
+        },
+        "occasions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": { "id": { "type": "string" }, "title": { "type": "string" } }
+          },
+          "__example__": [{ "id": "birthday", "title": "Birthday" }]
+        },
+        "outlet": { "type": "string", "__example__": "indiranagar" },
+        "date": { "type": "string", "__example__": "2026-10-24" },
+        "party": { "type": "string", "__example__": "4" },
+        "error": { "type": "string", "__example__": "" },
+        "has_error": { "type": "boolean", "__example__": false }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          { "type": "TextSubheading", "text": "${data.summary}" },
+          { "type": "TextCaption", "text": "${data.error}", "visible": "${data.has_error}" },
+          {
+            "type": "RadioButtonsGroup",
+            "name": "time",
+            "label": "Time",
+            "required": true,
+            "data-source": "${data.times}"
+          },
+          {
+            "type": "TextInput",
+            "name": "name",
+            "label": "Name for the booking",
+            "input-type": "text",
+            "required": true
+          },
+          {
+            "type": "Dropdown",
+            "name": "occasion",
+            "label": "Occasion (optional)",
+            "required": false,
+            "data-source": "${data.occasions}"
+          },
+          {
+            "type": "TextArea",
+            "name": "requests",
+            "label": "Special requests (optional)",
+            "required": false,
+            "max-length": 200
+          },
+          {
+            "type": "Footer",
+            "label": "Confirm booking",
+            "on-click-action": {
+              "name": "data_exchange",
+              "payload": {
+                "step": "confirm",
+                "outlet": "${data.outlet}",
+                "date": "${data.date}",
+                "party": "${data.party}",
+                "time": "${form.time}",
+                "name": "${form.name}",
+                "occasion": "${form.occasion}",
+                "requests": "${form.requests}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

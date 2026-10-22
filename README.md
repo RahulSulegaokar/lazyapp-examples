@@ -20,6 +20,8 @@ Every example runs on one shared WhatsApp number behind one small server, and ev
 | [Ledgerly lead machine](examples/lead-generation)        | `DEMO LEADS`      | Ad/QR attribution, qualification Flow, scoring with reasons, signed CRM webhook, rep calendar Flow, consented nurture with a coupon template, every opt-out path                                      |
 | [Clinic appointments](examples/clinic-appointments)      | `DEMO CLINIC`     | Live-slot booking Flow, consultation fee payments with refunds, reminder templates, pre-visit Flow, prescription PDFs                                                                                 |
 | [Study abroad admissions](examples/education-admissions) | `DEMO ADMISSIONS` | Course finder Flow, program carousel, document uploads, application fee, parent view, image-header intake template                                                                                    |
+| [WhatsApp Shop](examples/whatsapp-shop)                  | `DEMO SHOP`       | A D2C store: catalog and carousels, sizes, India address message, slots, UPI/COD checkout, order status, returns Flow, coupon and cart reminder                                                       |
+| [Food ordering](examples/food-ordering)                  | `DEMO FOOD`       | A cloud kitchen: nearest outlet by location, customise Flow, scheduled orders, UPI/cash, rider card and pin, table booking Flow, loyalty, one-tap reorder                                             |
 
 <!-- examples:end -->
 

@@ -1,0 +1,120 @@
+{
+  "version": "7.0",
+  "screens": [
+    {
+      "id": "CUSTOMIZE",
+      "title": "Make it yours",
+      "terminal": true,
+      "success": true,
+      "data": {
+        "item_id": { "type": "string", "__example__": "ml-chicken-biryani" },
+        "item_name": { "type": "string", "__example__": "Hyderabadi chicken dum biryani" },
+        "item_description": {
+          "type": "string",
+          "__example__": "Aged basmati, bone-in chicken, slow-cooked in a sealed handi."
+        },
+        "price_note": { "type": "string", "__example__": "Half ₹299 · Full ₹449" },
+        "sizes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          },
+          "__example__": [{ "id": "half", "title": "Half (serves 1)", "description": "₹299" }]
+        },
+        "spice_levels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": { "id": { "type": "string" }, "title": { "type": "string" } }
+          },
+          "__example__": [{ "id": "medium", "title": "Medium" }]
+        },
+        "add_ons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          },
+          "__example__": [{ "id": "raita", "title": "Extra raita", "description": "+ ₹30" }]
+        },
+        "quantities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": { "id": { "type": "string" }, "title": { "type": "string" } }
+          },
+          "__example__": [{ "id": "1", "title": "1" }]
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          { "type": "TextSubheading", "text": "${data.item_name}" },
+          { "type": "TextBody", "text": "${data.item_description}" },
+          { "type": "TextCaption", "text": "${data.price_note}" },
+          {
+            "type": "RadioButtonsGroup",
+            "name": "size",
+            "label": "Portion",
+            "required": true,
+            "data-source": "${data.sizes}"
+          },
+          {
+            "type": "RadioButtonsGroup",
+            "name": "spice",
+            "label": "Spice level",
+            "required": true,
+            "data-source": "${data.spice_levels}"
+          },
+          {
+            "type": "CheckboxGroup",
+            "name": "add_ons",
+            "label": "Add-ons",
+            "required": false,
+            "data-source": "${data.add_ons}"
+          },
+          {
+            "type": "Dropdown",
+            "name": "qty",
+            "label": "Quantity",
+            "required": true,
+            "data-source": "${data.quantities}"
+          },
+          {
+            "type": "TextInput",
+            "name": "note",
+            "label": "Cooking instructions (optional)",
+            "input-type": "text",
+            "required": false,
+            "max-chars": 140,
+            "helper-text": "For example: less oil, no onion"
+          },
+          {
+            "type": "Footer",
+            "label": "Add to cart",
+            "on-click-action": {
+              "name": "complete",
+              "payload": {
+                "item_id": "${data.item_id}",
+                "size": "${form.size}",
+                "spice": "${form.spice}",
+                "add_ons": "${form.add_ons}",
+                "qty": "${form.qty}",
+                "note": "${form.note}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

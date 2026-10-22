@@ -1,0 +1,19 @@
+{
+  "name": "@lazyapp-examples/example-whatsapp-shop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A complete D2C store inside WhatsApp: catalog, cart, address, slots, UPI/COD checkout, tracking, returns and reviews.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "sync-catalog": "tsx --env-file-if-exists=../../.env src/cli/sync-catalog.ts"
+  },
+  "dependencies": {
+    "@lazyapp-examples/demo-kit": "*",
+    "@lazyapp-examples/sdk": "*",
+    "zod": "^4.6.7"
+  }
+}

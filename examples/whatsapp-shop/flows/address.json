@@ -1,0 +1,74 @@
+{
+  "version": "7.0",
+  "screens": [
+    {
+      "id": "ADDRESS",
+      "title": "Delivery address",
+      "terminal": true,
+      "success": true,
+      "data": {},
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          { "type": "TextSubheading", "text": "Where should we deliver?" },
+          {
+            "type": "TextInput",
+            "name": "name",
+            "label": "Full name",
+            "input-type": "text",
+            "required": true
+          },
+          {
+            "type": "TextInput",
+            "name": "house",
+            "label": "Flat, house no., building",
+            "input-type": "text",
+            "required": true
+          },
+          {
+            "type": "TextInput",
+            "name": "street",
+            "label": "Street and area",
+            "input-type": "text",
+            "required": true
+          },
+          {
+            "type": "TextInput",
+            "name": "landmark",
+            "label": "Landmark (optional)",
+            "input-type": "text",
+            "required": false
+          },
+          { "type": "TextInput", "name": "city", "label": "City", "input-type": "text", "required": true },
+          {
+            "type": "TextInput",
+            "name": "pincode",
+            "label": "PIN code",
+            "input-type": "number",
+            "required": true,
+            "min-chars": 6,
+            "max-chars": 6,
+            "helper-text": "6 digits"
+          },
+          { "type": "TextInput", "name": "state", "label": "State", "input-type": "text", "required": true },
+          {
+            "type": "Footer",
+            "label": "Save address",
+            "on-click-action": {
+              "name": "complete",
+              "payload": {
+                "name": "${form.name}",
+                "house": "${form.house}",
+                "street": "${form.street}",
+                "landmark": "${form.landmark}",
+                "city": "${form.city}",
+                "pincode": "${form.pincode}",
+                "state": "${form.state}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
