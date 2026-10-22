@@ -262,6 +262,62 @@ export type FlowEndpointHandler<S> = (
 ) => Promise<FlowExchangeResponse>;
 
 // ---------------------------------------------------------------------------
+// Web pages (sign-in pages, check-in scanners, ticket images)
+// ---------------------------------------------------------------------------
+
+/** Session facts a web page may read about a WhatsApp user of this example. */
+export interface WebSessionInfo {
+  readonly sessionId: string;
+  readonly startedAt: Date;
+  readonly lastInboundAt: Date;
+  /** False once the 24h customer service window has closed. */
+  readonly windowOpen: boolean;
+}
+
+/** `failed`: the handler threw (logged; the user may have been sent an apology). */
+export type NotifyResult = 'sent' | 'no-session' | 'duplicate' | 'failed';
+
+/** What a web route handler can do. Pages never send to a number that is not in this example's session. */
+export interface WebContext<S> {
+  readonly example: { readonly id: string; readonly title: string; readonly startCode: string };
+  /** Shared example storage: the same `kv` handlers see. */
+  readonly kv: KeyValueStore;
+  readonly api: LazyAppClient;
+  readonly now: () => Date;
+  readonly log: Logger;
+  readonly config: { readonly publicBaseUrl: string; readonly phoneNumberId: string | null };
+  /** Absolute URL of this example's web root: `${publicBaseUrl}/x/<exampleId>`. */
+  readonly baseUrl: string;
+  /** Best-effort client IP (from the trusted reverse proxy), for rate limiting. */
+  readonly clientIp: string;
+  /** The live session of `address` in this example, or null (no session, another demo, or idle). */
+  session(address: string): WebSessionInfo | null;
+  /**
+   * Runs `handler` as a turn of `address`'s live session in this example (serialised with their
+   * messages), e.g. to say "you're checked in". `key` makes it exactly-once: the same key never runs
+   * twice for a session. Returns `no-session` (and does nothing) when the person is not in this demo.
+   */
+  notify(
+    address: string,
+    key: string,
+    handler: (ctx: ExampleContext<S>) => Promise<void>,
+  ): Promise<NotifyResult>;
+}
+
+export type WebRouteHandler<S> = (
+  web: WebContext<S>,
+  request: Request,
+  params: Readonly<Record<string, string>>,
+) => Promise<Response>;
+
+export interface WebRoute<S> {
+  readonly method: 'GET' | 'POST';
+  /** Relative to `/x/<exampleId>`, e.g. `/` or `/tickets/:code`. `:name` segments become `params`. */
+  readonly path: string;
+  readonly handler: WebRouteHandler<S>;
+}
+
+// ---------------------------------------------------------------------------
 // The Example contract
 // ---------------------------------------------------------------------------
 
@@ -295,6 +351,8 @@ export interface Example<S = unknown> {
   onEnd?(ctx: ExampleContext<S>, reason: EndReason): Promise<void>;
   /** data_exchange handlers by `FlowSpec.key`. */
   readonly flowEndpoints?: Readonly<Record<string, FlowEndpointHandler<S>>>;
+  /** Public web pages served at `/x/<id>/…` (a sign-in page, a check-in scanner, ticket images). */
+  readonly web?: readonly WebRoute<S>[];
 }
 
 /**

@@ -1,0 +1,75 @@
+{
+  "version": "7.0",
+  "screens": [
+    {
+      "id": "RATE",
+      "title": "Rate your support",
+      "terminal": true,
+      "success": true,
+      "data": {
+        "headline": {
+          "type": "string",
+          "__example__": "How did Meera do on SUP-48211?"
+        },
+        "ticket_id": {
+          "type": "string",
+          "__example__": "SUP-48211"
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextSubheading",
+            "text": "${data.headline}"
+          },
+          {
+            "type": "RadioButtonsGroup",
+            "name": "rating",
+            "label": "Your rating",
+            "required": true,
+            "data-source": [
+              { "id": "5", "title": "Excellent" },
+              { "id": "4", "title": "Good" },
+              { "id": "3", "title": "Okay" },
+              { "id": "2", "title": "Poor" },
+              { "id": "1", "title": "Very poor" }
+            ]
+          },
+          {
+            "type": "CheckboxGroup",
+            "name": "liked",
+            "label": "What went well?",
+            "required": false,
+            "data-source": [
+              { "id": "speed", "title": "Quick reply" },
+              { "id": "knowledge", "title": "Knew the answer" },
+              { "id": "friendly", "title": "Friendly and polite" },
+              { "id": "fixed", "title": "Fixed the first time" }
+            ]
+          },
+          {
+            "type": "TextArea",
+            "name": "comment",
+            "label": "Anything we could do better?",
+            "required": false,
+            "max-length": 600
+          },
+          {
+            "type": "Footer",
+            "label": "Send rating",
+            "on-click-action": {
+              "name": "complete",
+              "payload": {
+                "ticket_id": "${data.ticket_id}",
+                "rating": "${form.rating}",
+                "liked": "${form.liked}",
+                "comment": "${form.comment}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

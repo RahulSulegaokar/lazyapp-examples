@@ -1,0 +1,17 @@
+{
+  "name": "@lazyapp-examples/example-event-tickets",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Event ticketing: discovery carousel, attendee flow, India payments, QR tickets (PNG + PDF), reminders and web check-in.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@lazyapp-examples/demo-kit": "*",
+    "@lazyapp-examples/sdk": "*",
+    "uqr": "^0.1.3",
+    "zod": "^4.6.7"
+  }
+}

@@ -95,6 +95,16 @@ export function createApp(options: AppOptions): Hono {
     });
   });
 
+  /** Example web pages (sign-in pages, check-in scanners, ticket images): `examples/<id>` `web` routes. */
+  app.on(['GET', 'HEAD', 'POST'], ['/x/:example', '/x/:example/*'], limit, (c) => {
+    const exampleId = c.req.param('example');
+    const prefix = `/x/${exampleId}`;
+    const path = c.req.path.slice(prefix.length) || '/';
+    // nginx appends the peer address to X-Forwarded-For; earlier entries are client-supplied.
+    const forwarded = c.req.header('x-forwarded-for')?.split(',').at(-1)?.trim();
+    return options.runtime.web(exampleId, path, c.req.raw, { clientIp: forwarded ?? 'unknown' });
+  });
+
   app.on(['GET', 'HEAD'], '/healthz', (c) => {
     const storeOk = options.checkStore?.() ?? true;
     return c.json(

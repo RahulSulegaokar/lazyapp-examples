@@ -1,0 +1,129 @@
+{
+  "version": "7.0",
+  "data_api_version": "3.0",
+  "routing_model": {
+    "DETAILS": ["SUMMARY"],
+    "SUMMARY": []
+  },
+  "screens": [
+    {
+      "id": "DETAILS",
+      "title": "Attendee details",
+      "data": {
+        "event_title": { "type": "string", "__example__": "Monsoon Indie Nights" },
+        "tier_line": { "type": "string", "__example__": "Fan Pit · ₹1,499 each · Sun, 25 Oct · 7:00 pm" },
+        "name": { "type": "string", "__example__": "Asha Rao" },
+        "quantities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": { "id": { "type": "string" }, "title": { "type": "string" } }
+          },
+          "__example__": [
+            { "id": "1", "title": "1 ticket" },
+            { "id": "2", "title": "2 tickets" }
+          ]
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          { "type": "TextSubheading", "text": "${data.event_title}" },
+          { "type": "TextBody", "text": "${data.tier_line}" },
+          {
+            "type": "TextInput",
+            "name": "name",
+            "label": "Name on the ticket",
+            "input-type": "text",
+            "required": true,
+            "init-value": "${data.name}"
+          },
+          {
+            "type": "TextInput",
+            "name": "email",
+            "label": "Email for the receipt",
+            "input-type": "email",
+            "required": true
+          },
+          {
+            "type": "Dropdown",
+            "name": "quantity",
+            "label": "Tickets",
+            "required": true,
+            "data-source": "${data.quantities}"
+          },
+          {
+            "type": "TextInput",
+            "name": "promo",
+            "label": "Promo code (optional)",
+            "input-type": "text",
+            "required": false
+          },
+          {
+            "type": "OptIn",
+            "name": "updates",
+            "label": "Send me reminders and live updates on WhatsApp",
+            "required": false
+          },
+          {
+            "type": "Footer",
+            "label": "Review order",
+            "on-click-action": {
+              "name": "data_exchange",
+              "payload": {
+                "name": "${form.name}",
+                "email": "${form.email}",
+                "quantity": "${form.quantity}",
+                "promo": "${form.promo}",
+                "updates": "${form.updates}"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "SUMMARY",
+      "title": "Review order",
+      "terminal": true,
+      "success": true,
+      "data": {
+        "event_title": { "type": "string", "__example__": "Monsoon Indie Nights" },
+        "summary": {
+          "type": "string",
+          "__example__": "Fan Pit × 2: ₹2,998\nBooking fee: ₹60 (+ ₹10.80 GST)\nTotal: ₹3,068.80"
+        },
+        "promo_note": { "type": "string", "__example__": "LAZY20: 20% off tickets, up to ₹500" },
+        "hold_note": { "type": "string", "__example__": "Seats are held for 15 minutes once you confirm." },
+        "name": { "type": "string", "__example__": "Asha Rao" },
+        "email": { "type": "string", "__example__": "asha@example.com" },
+        "quantity": { "type": "string", "__example__": "2" },
+        "promo": { "type": "string", "__example__": "LAZY20" },
+        "updates": { "type": "boolean", "__example__": true }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          { "type": "TextSubheading", "text": "${data.event_title}" },
+          { "type": "TextBody", "text": "${data.summary}" },
+          { "type": "TextCaption", "text": "${data.promo_note}" },
+          { "type": "TextCaption", "text": "${data.hold_note}" },
+          {
+            "type": "Footer",
+            "label": "Confirm and pay",
+            "on-click-action": {
+              "name": "complete",
+              "payload": {
+                "name": "${data.name}",
+                "email": "${data.email}",
+                "quantity": "${data.quantity}",
+                "promo": "${data.promo}",
+                "updates": "${data.updates}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

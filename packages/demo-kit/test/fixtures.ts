@@ -61,6 +61,37 @@ export const counter = defineExample<CounterState>({
       await ctx.send.text(`Paid ${payment.reference_id}`);
     }
   },
+  web: [
+    {
+      method: 'GET',
+      path: '/count/:address',
+      handler: async (web, _request, params) => {
+        const session = web.session(params.address ?? '');
+        return new Response(JSON.stringify({ live: session !== null, ip: web.clientIp, base: web.baseUrl }), {
+          headers: { 'content-type': 'application/json' },
+        });
+      },
+    },
+    {
+      method: 'POST',
+      path: '/poke/:address',
+      handler: async (web, request, params) => {
+        const { key } = (await request.json()) as { key: string };
+        const result = await web.notify(params.address ?? '', key, async (ctx) => {
+          ctx.setState((state) => ({ ...state, count: state.count + 1 }));
+          await ctx.send.text(`Poked from the web (count ${ctx.state.count})`);
+        });
+        return new Response(JSON.stringify({ result }), { headers: { 'content-type': 'application/json' } });
+      },
+    },
+    {
+      method: 'GET',
+      path: '/crash',
+      handler: async () => {
+        throw new Error('page bug');
+      },
+    },
+  ],
   flowEndpoints: {
     async pick(ctx, request) {
       if (request.action === 'INIT') {

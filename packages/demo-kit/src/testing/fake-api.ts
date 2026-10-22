@@ -168,23 +168,6 @@ export class FakeLazyApp {
           },
     );
 
-    this.on('GET', '/v1/payments/configurations', () => ({
-      status: 200,
-      body: {
-        data:
-          this.options.paymentConfiguration === undefined
-            ? []
-            : [
-                {
-                  id: 'cfg_1',
-                  configuration_name: this.options.paymentConfiguration,
-                  provider: 'razorpay',
-                  status: 'active',
-                } satisfies PaymentConfiguration,
-              ],
-      },
-    }));
-
     this.on('POST', '/v1/payments', (call) => {
       const input = call.body as {
         to: string;
@@ -227,6 +210,24 @@ export class FakeLazyApp {
         ? { status: 404, body: { message: 'Not found' } }
         : { status: 200, body: order };
     });
+
+    // Registered after `/v1/payments/:id` so it wins (later routes take precedence).
+    this.on('GET', '/v1/payments/configurations', () => ({
+      status: 200,
+      body: {
+        data:
+          this.options.paymentConfiguration === undefined
+            ? []
+            : [
+                {
+                  id: 'cfg_1',
+                  configuration_name: this.options.paymentConfiguration,
+                  provider: 'razorpay',
+                  status: 'active',
+                } satisfies PaymentConfiguration,
+              ],
+      },
+    }));
 
     this.on('POST', '/v1/payments/:id/status', (call, params) => {
       const order = this.payments.get(params.id ?? '');

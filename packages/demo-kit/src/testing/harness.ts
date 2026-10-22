@@ -289,6 +289,37 @@ export class Harness<S> {
     );
   }
 
+  /**
+   * Requests one of the example's web pages, e.g. `h.web('/api/send', { method: 'POST', body })`.
+   * `path` is relative to `/x/<exampleId>`; JSON object bodies are serialised for you.
+   */
+  async web(
+    path: string,
+    init: {
+      method?: 'GET' | 'POST';
+      body?: unknown;
+      headers?: Record<string, string>;
+      clientIp?: string;
+    } = {},
+  ): Promise<Response> {
+    const isJson = init.body !== undefined && typeof init.body !== 'string';
+    const request = new Request(`https://demo.test/x/${this.example.id}${path}`, {
+      method: init.method ?? (init.body === undefined ? 'GET' : 'POST'),
+      headers: { ...(isJson ? { 'content-type': 'application/json' } : {}), ...init.headers },
+      ...(init.body === undefined
+        ? {}
+        : { body: isJson ? JSON.stringify(init.body) : (init.body as string) }),
+    });
+    return this.runtime.web(
+      this.example.id,
+      new URL(request.url).pathname.slice(`/x/${this.example.id}`.length) || '/',
+      request,
+      {
+        clientIp: init.clientIp ?? '203.0.113.7',
+      },
+    );
+  }
+
   /** Moves the simulated clock forward. */
   advance(ms: number): void {
     this.nowMs += ms;

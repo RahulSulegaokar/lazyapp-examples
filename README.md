@@ -10,9 +10,12 @@ Every example runs on one shared WhatsApp number behind one small server, and ev
 
 <!-- examples:start -->
 
-| Demo                                            | Start code   | What it shows                                                                  |
-| ----------------------------------------------- | ------------ | ------------------------------------------------------------------------------ |
-| [Hello LazyApp](examples/_template) (reference) | `DEMO HELLO` | Reply buttons, lists, reactions, location request, a WhatsApp Flow, follow-ups |
+| Demo                                            | Start code     | What it shows                                                                                                                                                |
+| ----------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Hello LazyApp](examples/_template) (reference) | `DEMO HELLO`   | Reply buttons, lists, reactions, location request, a WhatsApp Flow, follow-ups                                                                               |
+| [Halo Home Care](examples/support-desk)         | `DEMO SUPPORT` | Support desk: FAQ lists, order tracking, tickets with photos, SLA routing to agents in business hours, escalation, CSAT Flow, reopen, inbox pinning          |
+| [Login with WhatsApp](examples/otp-login)       | `DEMO OTP`     | Authentication templates (copy code, one-tap), managed OTP send/verify in chat and on a web sign-in page, sign-in alerts from `otp.*` webhooks, fraud guards |
+| [LazyApp Events](examples/event-tickets)        | `DEMO EVENTS`  | Media carousel, attendee Flow with live pricing, India payments with seat holds, QR tickets (PNG + PDF), reminders with a map, web check-in, waitlist        |
 
 <!-- examples:end -->
 
@@ -171,12 +174,13 @@ Deploys are safe to do at any time: `SIGTERM` stops intake, drains the queue and
 
 ### HTTP endpoints
 
-| Route                        | Purpose                                                                  |
-| ---------------------------- | ------------------------------------------------------------------------ |
-| `POST /webhooks/lazyapp`     | LazyApp webhooks (signature required)                                    |
-| `POST /flows/:example/:flow` | WhatsApp Flow `data_exchange`, forwarded decrypted and signed by LazyApp |
-| `GET /healthz`               | Liveness, queue depth, loaded examples                                   |
-| `GET /demos`                 | Public catalogue: titles, start codes, Meta features, `wa.me` links      |
+| Route                        | Purpose                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------- |
+| `POST /webhooks/lazyapp`     | LazyApp webhooks (signature required)                                           |
+| `POST /flows/:example/:flow` | WhatsApp Flow `data_exchange`, forwarded decrypted and signed by LazyApp        |
+| `GET /healthz`               | Liveness, queue depth, loaded examples                                          |
+| `GET /demos`                 | Public catalogue: titles, start codes, Meta features, `wa.me` links             |
+| `GET, POST /x/:example/*`    | An example's own web pages (`web` routes): sign-in page, ticket files, check-in |
 
 ## License
 

@@ -381,3 +381,54 @@ describe('flow data exchange', () => {
     expect(await h.flowExchange('pick', { action: 'INIT' })).toMatchObject({ status: 427 });
   });
 });
+
+describe('example web pages', () => {
+  it('serve routes with params, and tell whether a person is in this demo', async () => {
+    const h = setup();
+    const before = (await (await h.web('/count/%2B919800000001')).json()) as Record<string, unknown>;
+    expect(before).toEqual({ live: false, ip: '203.0.113.7', base: 'https://demo.test/x/counter' });
+
+    await h.user.send('DEMO COUNT');
+    const during = (await (await h.web('/count/919800000001')).json()) as Record<string, unknown>;
+    expect(during.live).toBe(true);
+
+    await h.as('+919800000002').send('DEMO OTHER');
+    const elsewhere = (await (await h.web('/count/919800000002')).json()) as Record<string, unknown>;
+    expect(elsewhere.live).toBe(false);
+  });
+
+  it('notify runs a turn in the live session exactly once per key, and never reaches outsiders', async () => {
+    const h = setup();
+    const poke = async (address: string, key: string) =>
+      (
+        (await (await h.web(`/poke/${encodeURIComponent(address)}`, { body: { key } })).json()) as {
+          result: string;
+        }
+      ).result;
+
+    expect(await poke('+919800000001', 'a')).toBe('no-session');
+    expect(h.calls).toHaveLength(0);
+
+    await h.user.send('DEMO COUNT');
+    h.clear();
+    expect(await poke('+919800000001', 'a')).toBe('sent');
+    expect(h.texts()).toEqual(['Poked from the web (count 1)']);
+    expect(h.state()).toMatchObject({ count: 1 });
+
+    h.clear();
+    expect(await poke('+919800000001', 'a')).toBe('duplicate');
+    expect(h.calls).toHaveLength(0);
+
+    h.advance(25 * HOUR);
+    expect(await poke('+919800000001', 'b')).toBe('no-session');
+  });
+
+  it('answers 404, 405 and 500 without leaking errors', async () => {
+    const h = setup();
+    expect((await h.web('/missing')).status).toBe(404);
+    expect((await h.web('/poke/x')).status).toBe(405);
+    const crash = await h.web('/crash');
+    expect(crash.status).toBe(500);
+    expect(await crash.json()).toEqual({ error: 'Internal error' });
+  });
+});

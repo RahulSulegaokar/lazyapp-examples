@@ -393,7 +393,10 @@ export interface Capability {
 
 export interface SendEventInput {
   readonly type: string;
-  readonly recipient: { readonly type?: 'phone_number' | 'contact_id'; readonly value: string };
+  /** By phone (`recipient.phone_number`, required for that type) or by contact uuid (`recipient.value`). */
+  readonly recipient:
+    | { readonly type?: 'phone_number'; readonly phone_number: string }
+    | { readonly type: 'contact_id'; readonly value: string };
   readonly properties?: Readonly<Record<string, unknown>>;
 }
 

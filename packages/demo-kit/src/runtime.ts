@@ -1,11 +1,13 @@
 import { isTestDelivery, parseWebhookEvent, verifyWebhookSignature } from '@lazyapp-examples/sdk';
 import type { WebhookEnvelope } from '@lazyapp-examples/sdk';
-import type { FlowExchangeRequest } from './example.js';
+import { SERVICE_WINDOW_MS } from './context.js';
+import type { FlowExchangeRequest, WebContext } from './example.js';
 import type { Logger } from './logger.js';
 import { KeyedQueue } from './queue.js';
 import { DemoRouter } from './router.js';
 import type { FlowExchangeResult, RouteOutcome, RouterOptions } from './router.js';
 import type { DemoStore } from './store.js';
+import { hasWebPath, jsonResponse, matchWebRoute, WEB_PREFIX } from './web.js';
 
 export interface RuntimeOptions extends RouterOptions {
   /** Endpoint signing secret (`LAZYAPP_WEBHOOK_SECRET`). */
@@ -158,6 +160,62 @@ export class DemoRuntime {
     }
     const key = this.store.getFlowToken(request.flow_token)?.address ?? `flow:${request.flow_token}`;
     return this.queue.run(key, () => this.router.flowExchange(exampleId, flowKey, request));
+  }
+
+  /**
+   * Serves an example's web page (`/x/<exampleId>/<path>`). `path` is relative to the example root.
+   * A route that throws answers 500 without leaking the error.
+   */
+  async web(
+    exampleId: string,
+    path: string,
+    request: Request,
+    options: { readonly clientIp?: string | undefined } = {},
+  ): Promise<Response> {
+    const example = this.router.registeredExamples.find((entry) => entry.id === exampleId);
+    const match = example === undefined ? null : matchWebRoute(example, request.method, path);
+    if (example === undefined || match === null) {
+      return example !== undefined && hasWebPath(example, path)
+        ? jsonResponse({ error: 'Method not allowed' }, 405)
+        : jsonResponse({ error: 'Not found' }, 404);
+    }
+    const publicBaseUrl = this.options.config.publicBaseUrl.replace(/\/+$/, '');
+    const log = this.log.child({ example: example.id, web: path });
+    const context: WebContext<unknown> = {
+      example: { id: example.id, title: example.title, startCode: example.startCode },
+      kv: this.store.keyValue(`example:${example.id}`, this.clock),
+      api: this.options.api,
+      now: this.clock,
+      log,
+      config: { publicBaseUrl, phoneNumberId: this.options.config.phoneNumberId ?? null },
+      baseUrl: `${publicBaseUrl}${WEB_PREFIX}/${example.id}`,
+      clientIp: options.clientIp ?? 'unknown',
+      session: (address) => {
+        const session = this.router.liveSession(example.id, address);
+        return session === undefined
+          ? null
+          : {
+              sessionId: session.sessionId,
+              startedAt: session.startedAt,
+              lastInboundAt: session.lastInboundAt,
+              windowOpen: this.clock().getTime() - session.lastInboundAt.getTime() < SERVICE_WINDOW_MS,
+            };
+      },
+      notify: (address, key, handler) => {
+        const session = this.router.liveSession(example.id, address);
+        return session === undefined
+          ? Promise.resolve('no-session' as const)
+          : this.queue.run(session.address, () =>
+              this.router.notify(example.id, session.address, key, handler),
+            );
+      },
+    };
+    try {
+      return await match.route.handler(context, request, match.params);
+    } catch (error) {
+      log.error('web route failed', { error });
+      return jsonResponse({ error: 'Internal error' }, 500);
+    }
   }
 
   async sweep(): Promise<number> {

@@ -12,3 +12,12 @@ export * from './store.js';
 export * from './registry.js';
 export * as ui from './ui.js';
 export { fit, formatInr, MessageLimitError } from './ui.js';
+export {
+  escapeHtml,
+  htmlResponse,
+  jsonResponse,
+  matchWebRoute,
+  PAGE_HEADERS,
+  SELF_CONTAINED_CSP,
+  WEB_PREFIX,
+} from './web.js';

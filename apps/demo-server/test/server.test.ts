@@ -137,6 +137,19 @@ describe('demo server', () => {
     );
     expect((await app.request('/nope')).status).toBe(404);
   });
+
+  it('serves example web pages under /x/<example>/', async () => {
+    const { app, store } = await build();
+    cleanups.push(() => {
+      store.close();
+    });
+
+    const page = await app.request('/x/otp-login/');
+    expect(page.status).toBe(200);
+    expect(page.headers.get('content-type')).toContain('text/html');
+    expect((await app.request('/x/otp-login')).status).toBe(200);
+    expect((await app.request('/x/not-an-example/')).status).toBe(404);
+  });
 });
 
 describe('loadConfig', () => {

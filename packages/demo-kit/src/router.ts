@@ -15,6 +15,7 @@ import { RESERVED_IDS, ServiceWindowClosedError } from './example.js';
 import type {
   AnyExampleContext,
   EndReason,
+  NotifyResult,
   FlowExchangeRequest,
   FlowExchangeResponse,
   AnyExample,
@@ -231,6 +232,39 @@ export class DemoRouter {
       this.log.error('flow data endpoint failed', { exampleId, flowKey, error });
       return { status: 500, error: 'The data endpoint failed' };
     }
+  }
+
+  /** The live (not idle) session of `address` in `exampleId`, or undefined. */
+  liveSession(exampleId: string, address: string): SessionRecord | undefined {
+    const normalized = normalizeAddress(address);
+    const session = normalized === null ? undefined : this.options.store.getSession(normalized);
+    return session?.exampleId === exampleId && !this.isExpired(session, this.clock()) ? session : undefined;
+  }
+
+  /**
+   * Runs `handler` as a turn of `address`'s live session in `exampleId`, for something that happened
+   * outside the chat (a web sign-in, a ticket scan). Exactly once per `key` and session; never starts
+   * a session, so it can only ever reach someone who is already in this demo.
+   */
+  async notify(
+    exampleId: string,
+    address: string,
+    key: string,
+    handler: (ctx: AnyExampleContext) => Promise<void>,
+  ): Promise<NotifyResult> {
+    const session = this.liveSession(exampleId, address);
+    if (session === undefined) {
+      return 'no-session';
+    }
+    const eventId = `web:${exampleId}:${key}`;
+    if (session.meta.recentEvents.includes(eventId)) {
+      return 'duplicate';
+    }
+    const outcome = await this.run(eventId, session, null, 'event', (_example, ctx) => handler(ctx));
+    if (outcome.status === 'ignored') {
+      return 'duplicate';
+    }
+    return outcome.error === undefined ? 'sent' : 'failed';
   }
 
   // --- Inbound messages -------------------------------------------------------
@@ -667,6 +701,9 @@ export function eventAddress(event: WebhookEnvelope): string | null {
   }
   if (event.type === 'address.received') {
     return pick(field('address', 'contact'));
+  }
+  if (event.type.startsWith('otp.')) {
+    return pick(field('verification', 'to'));
   }
   if (event.type.startsWith('contact.')) {
     return pick(field('contact', 'phone_number'));

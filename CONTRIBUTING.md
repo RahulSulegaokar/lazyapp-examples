@@ -19,10 +19,11 @@ npm run check     # lint + typecheck + test; CI runs exactly this on Node 22 and
    - Set `requires.catalog` / `requires.payments` to `optional` and **implement the fallback**: no catalog → interactive lists; no payment configuration → payment link, UPI intent or pay on delivery, and say so in the chat.
    - Add a `command` (`/shop`) for conversation starters. Only add an `iceBreaker` if it is worth showing to every visitor of the number.
 3. **Model the state** with zod (`src/state.ts`). Store ids and quantities, not catalog copies. Replace state with `ctx.setState`, never mutate it.
-4. **Write handlers** as small functions of `(ctx, inbound)`. Switch on `inbound.kind`; never dig through `inbound.raw` unless you must.
-5. **Write tests first-class** (`test/*.test.ts`) with `createHarness`: the happy path, every fallback, every button, unexpected input, EXIT mid-flow, and the events you handle.
-6. **Write the README** (see below).
-7. Run `npm run check` and `npm run setup -- --dry-run --only <id>`.
+4. **Need a web page?** (a sign-in page, generated ticket files, a staff check-in screen) Declare `web: [{ method, path, handler }]` on the example; it is served at `/x/<id>/<path>`. Handlers get the example's `kv`, the API client, the caller's IP, `session(address)` and `notify(address, key, handler)`, which runs a turn in that person's live session exactly once per key and never reaches anyone outside the demo. Use `htmlResponse()` (strict CSP, no framing, no referrer) and `escapeHtml()`.
+5. **Write handlers** as small functions of `(ctx, inbound)`. Switch on `inbound.kind`; never dig through `inbound.raw` unless you must.
+6. **Write tests first-class** (`test/*.test.ts`) with `createHarness`: the happy path, every fallback, every button, unexpected input, EXIT mid-flow, and the events you handle.
+7. **Write the README** (see below).
+8. Run `npm run check` and `npm run setup -- --dry-run --only <id>`.
 
 ## Rules for examples
 
