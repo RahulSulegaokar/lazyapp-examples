@@ -1,0 +1,16 @@
+{
+  "name": "@lazyapp-examples/example-education-admissions",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Study-abroad admissions on WhatsApp: course finder, counselling, documents, fees, reminders and a parent view.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@lazyapp-examples/demo-kit": "*",
+    "@lazyapp-examples/sdk": "*",
+    "zod": "^4.6.7"
+  }
+}

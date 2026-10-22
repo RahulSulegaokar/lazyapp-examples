@@ -1,0 +1,52 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Length 1797 >>
+stream
+0.05 0.45 0.42 rg 0 760 595 82 re f
+1 1 1 rg BT /F2 20 Tf 40 805 Td (Aarogya Clinics) Tj ET
+1 1 1 rg BT /F1 10 Tf 40 785 Td (Privacy notice for WhatsApp appointments) Tj ET
+0 0 0 rg
+0.12 0.12 0.12 rg BT /F2 16 Tf 40 730 Td (How we use your information) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 704 Td (What we collect: your WhatsApp number and name, the patient name, age and gender,) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 687.5 Td (the reason for the visit, and anything you choose to share in the pre-visit form.) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 665 Td (Why: to book and manage your appointment, send reminders you ask for, and share) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 648.5 Td (prescriptions and reports with you. We never use health data for marketing.) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 626 Td (Who sees it: your doctor and the front desk at your branch. Messages travel through) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 609.5 Td (WhatsApp and our messaging provider, LazyApp, and are stored in India.) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 587 Td (How long: appointment records are kept as required by medical records rules;) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 570.5 Td (chat data from this demo is deleted when the demo session ends.) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 548 Td (Your rights \(DPDP Act, 2023\): access, correction and erasure of your data, and) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 531.5 Td (withdrawal of consent at any time. Reply STOP to stop all messages.) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 509 Td (Grievance officer: privacy@aarogya-clinics.example) Tj ET
+0.45 0.45 0.45 rg BT /F1 8 Tf 40 40 Td (Sample document generated for the LazyApp WhatsApp demo. Not a real medical, legal or admissions record.) Tj ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000000348 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2299
+%%EOF

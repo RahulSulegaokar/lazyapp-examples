@@ -1,0 +1,88 @@
+{
+  "version": "7.0",
+  "screens": [
+    {
+      "id": "INTAKE",
+      "title": "Pre-visit form",
+      "terminal": true,
+      "success": true,
+      "data": {},
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextBody",
+            "text": "Two minutes now saves ten at the front desk. Your doctor reads this before you walk in."
+          },
+          {
+            "type": "TextArea",
+            "name": "concern",
+            "label": "What is the main problem?",
+            "required": true,
+            "max-length": 500
+          },
+          {
+            "type": "Dropdown",
+            "name": "duration",
+            "label": "Since when?",
+            "required": true,
+            "data-source": [
+              { "id": "today", "title": "Since today" },
+              { "id": "days", "title": "A few days" },
+              { "id": "weeks", "title": "1–4 weeks" },
+              { "id": "months", "title": "More than a month" }
+            ]
+          },
+          {
+            "type": "CheckboxGroup",
+            "name": "conditions",
+            "label": "Existing conditions",
+            "required": false,
+            "data-source": [
+              { "id": "diabetes", "title": "Diabetes" },
+              { "id": "hypertension", "title": "High blood pressure" },
+              { "id": "asthma", "title": "Asthma / COPD" },
+              { "id": "thyroid", "title": "Thyroid" },
+              { "id": "heart", "title": "Heart disease" },
+              { "id": "pregnant", "title": "Pregnant" }
+            ]
+          },
+          {
+            "type": "TextInput",
+            "name": "allergies",
+            "label": "Allergies (medicines, food)",
+            "input-type": "text",
+            "required": false
+          },
+          {
+            "type": "TextArea",
+            "name": "medications",
+            "label": "Medicines you take regularly",
+            "required": false,
+            "max-length": 300
+          },
+          {
+            "type": "OptIn",
+            "name": "accurate",
+            "label": "This information is accurate to the best of my knowledge",
+            "required": true
+          },
+          {
+            "type": "Footer",
+            "label": "Send to my doctor",
+            "on-click-action": {
+              "name": "complete",
+              "payload": {
+                "concern": "${form.concern}",
+                "duration": "${form.duration}",
+                "conditions": "${form.conditions}",
+                "allergies": "${form.allergies}",
+                "medications": "${form.medications}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

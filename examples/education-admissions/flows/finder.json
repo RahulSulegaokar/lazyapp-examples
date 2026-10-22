@@ -1,0 +1,293 @@
+{
+  "version": "7.0",
+  "data_api_version": "3.0",
+  "routing_model": {
+    "PREFS": ["RESULTS"],
+    "RESULTS": []
+  },
+  "screens": [
+    {
+      "id": "PREFS",
+      "title": "Find your program",
+      "data": {
+        "countries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "uk",
+              "title": "🇬🇧 United Kingdom"
+            }
+          ]
+        },
+        "levels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "pg",
+              "title": "Master's (PG)"
+            }
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "data",
+              "title": "Data Science & Analytics"
+            }
+          ]
+        },
+        "intakes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "2027-fall",
+              "title": "Sep–Dec 2027"
+            }
+          ]
+        },
+        "budgets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "b35",
+              "title": "₹25–35 lakh / year"
+            }
+          ]
+        },
+        "ielts_bands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "6.5",
+              "title": "6.5"
+            }
+          ]
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextSubheading",
+            "text": "Tell us what you are looking for"
+          },
+          {
+            "type": "TextCaption",
+            "text": "We match you against 18 programs at partner universities. Tuition is indicative."
+          },
+          {
+            "type": "Dropdown",
+            "name": "country",
+            "label": "Where do you want to study?",
+            "required": true,
+            "data-source": "${data.countries}"
+          },
+          {
+            "type": "RadioButtonsGroup",
+            "name": "level",
+            "label": "Level",
+            "required": true,
+            "data-source": "${data.levels}"
+          },
+          {
+            "type": "Dropdown",
+            "name": "field",
+            "label": "Field of study",
+            "required": true,
+            "data-source": "${data.fields}"
+          },
+          {
+            "type": "Dropdown",
+            "name": "intake",
+            "label": "When do you want to start?",
+            "required": true,
+            "data-source": "${data.intakes}"
+          },
+          {
+            "type": "Dropdown",
+            "name": "budget",
+            "label": "Tuition budget",
+            "required": true,
+            "data-source": "${data.budgets}"
+          },
+          {
+            "type": "Dropdown",
+            "name": "ielts",
+            "label": "IELTS overall (or PTE equivalent)",
+            "required": true,
+            "data-source": "${data.ielts_bands}"
+          },
+          {
+            "type": "Footer",
+            "label": "Find programs",
+            "on-click-action": {
+              "name": "data_exchange",
+              "payload": {
+                "trigger": "search",
+                "country": "${form.country}",
+                "level": "${form.level}",
+                "field": "${form.field}",
+                "intake": "${form.intake}",
+                "budget": "${form.budget}",
+                "ielts": "${form.ielts}"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "RESULTS",
+      "title": "Your matches",
+      "terminal": true,
+      "success": true,
+      "data": {
+        "heading": {
+          "type": "string",
+          "__example__": "4 programs match"
+        },
+        "summary": {
+          "type": "string",
+          "__example__": "Master's · Data Science · UK · Sep–Dec 2027"
+        },
+        "programs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          },
+          "__example__": [
+            {
+              "id": "leeds-msc-ds",
+              "title": "MSc Data Science · Leeds",
+              "description": "~₹31 lakh / year · IELTS 6.5 · Sep 2027"
+            }
+          ]
+        },
+        "has_note": {
+          "type": "boolean",
+          "__example__": true
+        },
+        "note": {
+          "type": "string",
+          "__example__": "You will need an IELTS score before the deadline."
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextHeading",
+            "text": "${data.heading}"
+          },
+          {
+            "type": "TextCaption",
+            "text": "${data.summary}"
+          },
+          {
+            "type": "TextBody",
+            "text": "${data.note}",
+            "visible": "${data.has_note}"
+          },
+          {
+            "type": "CheckboxGroup",
+            "name": "shortlist",
+            "label": "Pick up to 5 to shortlist",
+            "required": true,
+            "min-selected-items": 1,
+            "max-selected-items": 5,
+            "data-source": "${data.programs}"
+          },
+          {
+            "type": "Footer",
+            "label": "Shortlist",
+            "on-click-action": {
+              "name": "data_exchange",
+              "payload": {
+                "trigger": "shortlist",
+                "shortlist": "${form.shortlist}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

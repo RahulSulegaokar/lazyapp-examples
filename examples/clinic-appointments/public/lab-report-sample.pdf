@@ -1,0 +1,53 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Length 1706 >>
+stream
+0.05 0.45 0.42 rg 0 760 595 82 re f
+1 1 1 rg BT /F2 20 Tf 40 805 Td (Aarogya Diagnostics) Tj ET
+1 1 1 rg BT /F1 10 Tf 40 785 Td (NABL-style sample report  |  Koramangala, Bengaluru) Tj ET
+0 0 0 rg
+0.12 0.12 0.12 rg BT /F2 16 Tf 40 730 Td (Complete Blood Count \(CBC\)) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 704 Td (Patient: Demo Patient  |  Sample: Venous blood  |  Report ID: LAB-DEMO-2210) Tj ET
+0.8 0.8 0.8 RG 0.6 w 40 693.5 m 555 693.5 l S
+0.12 0.12 0.12 rg BT /F2 10.5 Tf 40 667.5 Td (Test                          Result        Unit            Reference range) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 651 Td (Haemoglobin                   13.2          g/dL            12.0 - 15.5) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 634.5 Td (Total WBC count               9,800         /cu.mm          4,000 - 11,000) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 618 Td (Neutrophils                   68            %               40 - 75) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 601.5 Td (Lymphocytes                   26            %               20 - 45) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 585 Td (Platelet count                2.4           lakh/cu.mm      1.5 - 4.5) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 568.5 Td (ESR                           18            mm/hr           0 - 20) Tj ET
+0.8 0.8 0.8 RG 0.6 w 40 558 m 555 558 l S
+0.12 0.12 0.12 rg BT /F2 10.5 Tf 40 532 Td (Impression: Within normal limits. Correlate clinically.) Tj ET
+0.12 0.12 0.12 rg BT /F1 10.5 Tf 40 495.5 Td (Verified by Dr. S. Ramesh, MD \(Pathology\)) Tj ET
+0.45 0.45 0.45 rg BT /F1 8 Tf 40 40 Td (Sample document generated for the LazyApp WhatsApp demo. Not a real medical, legal or admissions record.) Tj ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000000348 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2208
+%%EOF

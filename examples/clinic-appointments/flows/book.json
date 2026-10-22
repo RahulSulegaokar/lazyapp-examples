@@ -1,0 +1,152 @@
+{
+  "version": "7.0",
+  "data_api_version": "3.0",
+  "routing_model": {
+    "APPOINTMENT": ["PATIENT"],
+    "PATIENT": []
+  },
+  "screens": [
+    {
+      "id": "APPOINTMENT",
+      "title": "Choose a slot",
+      "data": {
+        "doctor_name": { "type": "string", "__example__": "Dr. Kavita Rao" },
+        "doctor_meta": { "type": "string", "__example__": "General Medicine · Koramangala · Fee ₹600" },
+        "dates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          },
+          "__example__": [{ "id": "2026-10-24", "title": "Sat, 24 Oct", "description": "12 slots free" }]
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" }
+            }
+          },
+          "__example__": [{ "id": "10:30", "title": "10:30 AM" }]
+        },
+        "slots_visible": { "type": "boolean", "__example__": true },
+        "has_error": { "type": "boolean", "__example__": false },
+        "error_message": { "type": "string", "__example__": "That slot was just taken. Pick another." }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          { "type": "TextHeading", "text": "${data.doctor_name}" },
+          { "type": "TextCaption", "text": "${data.doctor_meta}" },
+          { "type": "TextBody", "text": "${data.error_message}", "visible": "${data.has_error}" },
+          {
+            "type": "Dropdown",
+            "name": "date",
+            "label": "Date",
+            "required": true,
+            "data-source": "${data.dates}",
+            "on-select-action": {
+              "name": "data_exchange",
+              "payload": { "trigger": "date_selected", "date": "${form.date}" }
+            }
+          },
+          {
+            "type": "RadioButtonsGroup",
+            "name": "time",
+            "label": "Time",
+            "required": true,
+            "visible": "${data.slots_visible}",
+            "data-source": "${data.slots}"
+          },
+          {
+            "type": "Footer",
+            "label": "Continue",
+            "on-click-action": {
+              "name": "data_exchange",
+              "payload": { "trigger": "slot_chosen", "date": "${form.date}", "time": "${form.time}" }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PATIENT",
+      "title": "Patient details",
+      "terminal": true,
+      "success": true,
+      "data": {
+        "summary": { "type": "string", "__example__": "Dr. Kavita Rao · Sat, 24 Oct · 10:30 AM" },
+        "date": { "type": "string", "__example__": "2026-10-24" },
+        "time": { "type": "string", "__example__": "10:30" },
+        "has_error": { "type": "boolean", "__example__": false },
+        "error_message": {
+          "type": "string",
+          "__example__": "That slot was just taken. Go back and pick another."
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          { "type": "TextSubheading", "text": "${data.summary}" },
+          { "type": "TextBody", "text": "${data.error_message}", "visible": "${data.has_error}" },
+          {
+            "type": "TextInput",
+            "name": "patient_name",
+            "label": "Patient's full name",
+            "input-type": "text",
+            "required": true,
+            "max-chars": 80
+          },
+          {
+            "type": "TextInput",
+            "name": "age",
+            "label": "Age (years)",
+            "input-type": "number",
+            "required": true,
+            "helper-text": "For children under 1, enter 0"
+          },
+          {
+            "type": "RadioButtonsGroup",
+            "name": "gender",
+            "label": "Gender",
+            "required": false,
+            "data-source": [
+              { "id": "female", "title": "Female" },
+              { "id": "male", "title": "Male" },
+              { "id": "other", "title": "Other / prefer not to say" }
+            ]
+          },
+          {
+            "type": "TextArea",
+            "name": "reason",
+            "label": "Reason for visit (optional)",
+            "required": false,
+            "max-length": 300
+          },
+          {
+            "type": "Footer",
+            "label": "Hold this slot",
+            "on-click-action": {
+              "name": "data_exchange",
+              "payload": {
+                "trigger": "book",
+                "date": "${data.date}",
+                "time": "${data.time}",
+                "patient_name": "${form.patient_name}",
+                "age": "${form.age}",
+                "gender": "${form.gender}",
+                "reason": "${form.reason}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

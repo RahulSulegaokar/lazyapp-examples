@@ -239,6 +239,22 @@ export class FakeLazyApp {
       return { status: 200, body: updated };
     });
 
+    this.on('POST', '/v1/payments/:id/refund', (call, params) => {
+      const order = this.payments.get(params.id ?? '');
+      if (order === undefined) {
+        return { status: 404, body: { message: 'Not found' } };
+      }
+      const amount = (call.body as { amount?: number } | undefined)?.amount ?? order.amount_paid;
+      const refunded = order.amount_refunded + amount;
+      const updated: PaymentOrder = {
+        ...order,
+        amount_refunded: refunded,
+        payment_status: refunded >= order.amount_paid ? 'refunded' : 'partially_refunded',
+      };
+      this.payments.set(order.id, updated);
+      return { status: 200, body: updated };
+    });
+
     this.on('POST', '/v1/contacts/:uuid/consent', () => ({ status: 201, body: { status: 'recorded' } }));
     this.on('POST', '/v1/contacts/:uuid/tags', (call, params) => ({
       status: 200,

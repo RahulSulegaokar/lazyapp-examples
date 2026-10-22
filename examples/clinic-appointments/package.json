@@ -1,0 +1,16 @@
+{
+  "name": "@lazyapp-examples/example-clinic-appointments",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Clinic appointments on WhatsApp: live slots, payments, reminders, pre-visit forms and reports.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@lazyapp-examples/demo-kit": "*",
+    "@lazyapp-examples/sdk": "*",
+    "zod": "^4.6.7"
+  }
+}
