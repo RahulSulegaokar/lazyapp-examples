@@ -126,12 +126,19 @@ async function provisionTemplates(options: ProvisionOptions, add: (row: SummaryR
       const missing = languages.filter((language) => !existing.has(`${name}:${language}`));
       if (missing.length === 0) {
         const found = existing.get(`${name}:${languages[0] ?? ''}`);
+        const wanted = spec.kind === 'authentication' ? 'AUTHENTICATION' : spec.input.category;
+        const actual = found?.category.toUpperCase() ?? null;
+        // Meta reclassifies templates whose wording could carry a promotion; the example
+        // then sends it without the marketing opt-in it now needs, so flag it.
+        const reclassified = actual !== null && actual !== wanted;
         add({
           example: example.id,
           resource: 'template',
           name,
-          status: 'exists',
-          detail: `${found?.status ?? '?'} · ${spec.purpose}`,
+          status: reclassified ? 'action needed' : 'exists',
+          detail: reclassified
+            ? `Meta moved it from ${wanted} to ${actual}: reword it under a new name, or send it only after marketing opt-in`
+            : `${found?.status ?? '?'} · ${spec.purpose}`,
         });
         continue;
       }

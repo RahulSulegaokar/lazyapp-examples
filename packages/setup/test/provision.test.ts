@@ -112,7 +112,7 @@ function fakeWorkspace() {
     fetch: api.fetch,
     maxRetries: 0,
   });
-  return { api, client, starters: () => starters };
+  return { api, client, starters: () => starters, templates };
 }
 
 const options = async (client: LazyAppClient, dryRun: boolean) => ({
@@ -190,6 +190,20 @@ describe('provision', () => {
     expect(result.rows.find((row) => row.resource === 'webhook')).toMatchObject({
       status: 'action needed',
       detail: expect.stringContaining('payment.captured'),
+    });
+  });
+
+  it('flags a template Meta moved to another category, since sending it now needs opt-in', async () => {
+    const { client, templates } = fakeWorkspace();
+    await provision(await options(client, false));
+    const template = templates.find((t) => t.name === 'demo_hello_follow_up')!;
+    Object.assign(template, { status: 'approved', category: 'MARKETING' });
+
+    const result = await provision(await options(client, false));
+
+    expect(result.rows.find((row) => row.name === 'demo_hello_follow_up')).toMatchObject({
+      status: 'action needed',
+      detail: expect.stringContaining('to MARKETING'),
     });
   });
 });
