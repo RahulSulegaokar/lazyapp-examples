@@ -311,10 +311,8 @@ export async function previewUpdate(ctx: Ctx, bookingId: string): Promise<void> 
         type: 'body',
         parameters: [
           { type: 'text', text: event.title },
-          {
-            type: 'text',
-            text: `Doors open at ${formatTime(doors)} and the queue is moving fast. Have your QR code ready.`,
-          },
+          { type: 'text', text: booking.id },
+          { type: 'text', text: formatTime(doors) },
         ],
       },
     ],

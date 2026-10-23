@@ -605,10 +605,7 @@ describe('event-tickets: after booking', () => {
       components: [
         {
           type: 'body',
-          parameters: [
-            { text: 'Late Night Laughs' },
-            { text: expect.stringContaining('Doors open at 8:00 pm') },
-          ],
+          parameters: [{ text: 'Late Night Laughs' }, { text: id }, { text: '8:00 pm' }],
         },
       ],
     });

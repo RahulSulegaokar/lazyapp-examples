@@ -6,8 +6,11 @@ export const TEMPLATES = {
   reminder: 'demo_event_tickets_reminder',
   /** An hour before, with the venue as a location header. */
   startingSoon: 'demo_event_tickets_starting',
-  /** Organiser updates to ticket holders (gate changes, weather, line-up). */
-  update: 'demo_event_tickets_update',
+  /**
+   * Schedule change for one booking. Replaces `demo_event_tickets_update`, whose free-text slot
+   * led Meta to reclassify it as MARKETING; fixed wording keeps this one UTILITY.
+   */
+  update: 'demo_event_tickets_change',
   /** After the event: rate it. */
   feedback: 'demo_event_tickets_feedback',
 } as const;
@@ -61,16 +64,14 @@ export const manifest: ExampleManifest = {
     },
     {
       kind: 'standard',
-      purpose: 'Live update to everyone holding a ticket (in production a broadcast to the event segment).',
+      purpose: 'Schedule change for a ticket holder (in production a broadcast to the event segment).',
       input: {
         name: TEMPLATES.update,
         language: 'en',
         category: 'UTILITY',
-        body_text: 'Update for {{1}} ticket holders: {{2}} Reply MENU for your ticket and the venue map.',
-        body_examples: [
-          'Monsoon Indie Nights',
-          'Because of the rain, gates open at 6:30 pm and the first band starts at 7:30 pm.',
-        ],
+        body_text:
+          'Schedule change for {{1}}, booking {{2}}: doors now open at {{3}}. Your ticket is still valid, so keep its QR code ready at the gate.',
+        body_examples: ['Monsoon Indie Nights', 'MIN-24051', '6:30 pm'],
         footer_text: 'LazyApp demo · reply STOP to opt out',
         submit: true,
       },

@@ -106,10 +106,10 @@ Templates created by `npm run setup` (all UTILITY, English):
 | ----------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
 | `demo_event_tickets_reminder` |          | Hi {{1}}, see you tomorrow at {{2}}! Doors open at {{3}}; the venue is {{4}}. Your ticket is saved in this chat, so there is nothing to print. | Show my ticket                   |
 | `demo_event_tickets_starting` | LOCATION | Starting in an hour: {{1}}. Doors are open, so keep the QR code of booking {{2}} ready at the gate. Tap the map for directions.                | Show my ticket                   |
-| `demo_event_tickets_update`   |          | Update for {{1}} ticket holders: {{2}} Reply MENU for your ticket and the venue map.                                                           |                                  |
+| `demo_event_tickets_change`   |          | Schedule change for {{1}}, booking {{2}}: doors now open at {{3}}. Your ticket is still valid, so keep its QR code ready at the gate.          |                                  |
 | `demo_event_tickets_feedback` |          | Thanks for coming to {{1}}! How was it, {{2}}? Your rating goes straight to the organisers.                                                    | Loved it · It was OK · Not great |
 
-Meta may reclassify the feedback template as MARKETING; if it does, schedule it only after `ctx.consent.optInToMarketing(...)`.
+Meta reclassifies templates whose wording could carry a promotion. It moved an earlier free-text `demo_event_tickets_update` to MARKETING, which is why the change template has fixed wording. If it does the same to the feedback template, schedule it only after `ctx.consent.optInToMarketing(...)`.
 
 ## How it holds up
 
@@ -142,7 +142,7 @@ Meta may reclassify the feedback template as MARKETING; if it does, schedule it 
 
 ## Live updates in production
 
-The **Live updates** button sends the `demo_event_tickets_update` template to the person who tapped it, because a demo on a shared number must never message anyone else. In production, organisers send it to every ticket holder at once: every buyer is tagged `event:<id>`, so create a contact segment on that tag and `POST /v1/broadcasts` with `template_name: demo_event_tickets_update` and the segment id. LazyApp applies opt-outs and frequency caps when the broadcast runs. The waitlist works the same way: `waitlist:<id>` is the segment to offer released seats to.
+The **Live updates** button sends the `demo_event_tickets_change` template to the person who tapped it, because a demo on a shared number must never message anyone else. In production, organisers send it to every ticket holder at once: every buyer is tagged `event:<id>`, so create a contact segment on that tag and `POST /v1/broadcasts` with `template_name: demo_event_tickets_change` and the segment id. LazyApp applies opt-outs and frequency caps when the broadcast runs. The waitlist works the same way: `waitlist:<id>` is the segment to offer released seats to.
 
 ## Platform gaps found
 
