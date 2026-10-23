@@ -34,6 +34,8 @@ export interface ProvisionOptions {
   readonly publishFlows?: boolean | undefined;
   /** Also merge each example's ice breaker into the number's (max 4, shown to everyone). Default false. */
   readonly iceBreakers?: boolean | undefined;
+  /** Commands also show to everyone who chats with the number, so they are opt-in like ice breakers. */
+  readonly commands?: boolean | undefined;
   /** Delete and recreate the webhook endpoint when its events are out of date (new secret!). */
   readonly recreateWebhook?: boolean | undefined;
   /** Events the server needs; usually `DemoRouter.requiredEvents()`. */
@@ -388,7 +390,11 @@ async function provisionStarters(
   const added: string[] = [];
   for (const example of options.examples) {
     const command = example.manifest.command;
-    if (command !== undefined && !commands.some((existing) => existing.name === command.name)) {
+    if (
+      options.commands === true &&
+      command !== undefined &&
+      !commands.some((existing) => existing.name === command.name)
+    ) {
       commands.push(command);
       added.push(`/${command.name}`);
     }

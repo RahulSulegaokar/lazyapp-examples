@@ -176,7 +176,7 @@ journalctl -u lazyapp-demo -f            # JSON logs, phone numbers masked
 curl -s https://demo.lazyapp.in/healthz
 ```
 
-`npm run setup` creates the webhook at `${PUBLIC_BASE_URL}/webhooks/lazyapp` subscribed to exactly the events the loaded examples handle (`message.received`, `message.failed`, `payment.captured`, `payment.failed`, `contact.opted_out`, `otp.verified`, `otp.failed`), submits every template for Meta review and publishes every Flow with its data endpoint at `${PUBLIC_BASE_URL}/flows/<example>/<flow>`. It never sets ice breakers unless you pass `--ice-breakers`: they would show to every visitor of the shared number. Meta reviews templates in minutes to hours; re-run `npm run setup -- --dry-run` to see where each one stands. The admissions intake template has an image header and is created separately with `examples/education-admissions/src/provision-intake-template.ts`.
+`npm run setup` creates the webhook at `${PUBLIC_BASE_URL}/webhooks/lazyapp` subscribed to exactly the events the loaded examples handle (`message.received`, `message.failed`, `payment.captured`, `payment.failed`, `contact.opted_out`, `otp.verified`, `otp.failed`), submits every template for Meta review and publishes every Flow with its data endpoint at `${PUBLIC_BASE_URL}/flows/<example>/<flow>`. It never sets ice breakers or /commands unless you pass `--ice-breakers` or `--commands`: they would show to every visitor of the shared number. Meta reviews templates in minutes to hours; re-run `npm run setup -- --dry-run` to see where each one stands. The admissions intake template has an image header and is created separately with `examples/education-admissions/src/provision-intake-template.ts`.
 
 ### 3. Check it
 

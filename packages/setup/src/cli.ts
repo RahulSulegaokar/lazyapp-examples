@@ -13,6 +13,7 @@ Usage: npm run setup -- [options]
   --include-reference   Also provision examples/_template ("hello")
   --no-publish          Leave new flows as drafts
   --ice-breakers        Merge example ice breakers into the number's (shown to everyone)
+  --commands            Merge example /commands into the number's (shown to everyone)
   --recreate-webhook    Recreate the webhook endpoint if its events are out of date (new secret)
   -h, --help            Show this help
 
@@ -27,6 +28,7 @@ async function main(): Promise<number> {
       'include-reference': { type: 'boolean', default: false },
       'no-publish': { type: 'boolean', default: false },
       'ice-breakers': { type: 'boolean', default: false },
+      commands: { type: 'boolean', default: false },
       'recreate-webhook': { type: 'boolean', default: false },
       help: { type: 'boolean', short: 'h', default: false },
     },
@@ -82,6 +84,7 @@ async function main(): Promise<number> {
     phoneNumberId: process.env.LAZYAPP_PHONE_NUMBER_ID,
     publishFlows: !values['no-publish'],
     iceBreakers: values['ice-breakers'],
+    commands: values.commands,
     recreateWebhook: values['recreate-webhook'],
     webhookEvents,
   });

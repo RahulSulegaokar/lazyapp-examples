@@ -120,6 +120,7 @@ const options = async (client: LazyAppClient, dryRun: boolean) => ({
   examples: await loadExamples(undefined, { includeReference: true, only: ['hello'] }),
   publicBaseUrl: 'https://demo.lazyapp.in/',
   dryRun,
+  commands: true,
   webhookEvents: ['message.received', 'message.failed'] as const,
 });
 
@@ -164,6 +165,17 @@ describe('provision', () => {
 
     expect(second.webhookSecret).toBeNull();
     expect(new Set(second.rows.map((row) => row.status))).toEqual(new Set(['exists']));
+  });
+
+  it("leaves the number's commands alone unless asked, because they show to everyone", async () => {
+    const { client } = fakeWorkspace();
+
+    const result = await provision({ ...(await options(client, false)), commands: false });
+
+    expect(result.rows.find((row) => row.resource === 'starters')?.status).not.toBe('updated');
+    expect(
+      (await client.connections.getConversationStarters(result.connection!.uuid)).commands.map((c) => c.name),
+    ).toEqual(['login']);
   });
 
   it('flags a webhook whose events are out of date instead of silently diverging', async () => {
