@@ -176,7 +176,7 @@ npm run sync-catalog -w @lazyapp-examples/example-whatsapp-shop
 | `PAYMENT_GATEWAY_ACCOUNT` | Payment-link fallback (Cashfree/Razorpay gateway account id in LazyApp).             |
 | `LAZYAPP_PHONE_NUMBER_ID` | Which number's catalog and payments to use when the workspace has several.           |
 
-API key scopes: `messages:send`, `messages:read`, `templates:write`, `payments:write` (refunds and setup only), `catalog:write` (only for `sync-catalog`).
+API key scopes: `messages:send`, `messages:read`, `flows:write` (the server looks flows up with `GET /v1/flows`), `payments:write`, `templates:write` (setup), `catalog:write` (only for `sync-catalog`).
 
 ## Limitations
 

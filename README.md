@@ -10,18 +10,24 @@ Every example runs on one shared WhatsApp number behind one small server, and ev
 
 <!-- examples:start -->
 
-| Demo                                                     | Start code        | What it shows                                                                                                                                                                                         |
-| -------------------------------------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Hello LazyApp](examples/_template) (reference)          | `DEMO HELLO`      | Reply buttons, lists, reactions, location request, a WhatsApp Flow, follow-ups                                                                                                                        |
-| [Halo Home Care](examples/support-desk)                  | `DEMO SUPPORT`    | Support desk: FAQ lists, order tracking, tickets with photos, SLA routing to agents in business hours, escalation, CSAT Flow, reopen, inbox pinning                                                   |
-| [Login with WhatsApp](examples/otp-login)                | `DEMO OTP`        | Authentication templates (copy code, one-tap), managed OTP send/verify in chat and on a web sign-in page, sign-in alerts from `otp.*` webhooks, fraud guards                                          |
-| [LazyApp Events](examples/event-tickets)                 | `DEMO EVENTS`     | Media carousel, attendee Flow with live pricing, India payments with seat holds, QR tickets (PNG + PDF), reminders with a map, web check-in, waitlist                                                 |
-| [Brickfield Homes](examples/real-estate)                 | `DEMO HOMES`      | Property search to site visit: data-exchange Flows (preferences, EMI, slot booking), media carousel, brochure PDF, location, agent contact card, location-header template, reminders, lead-score tags |
-| [Ledgerly lead machine](examples/lead-generation)        | `DEMO LEADS`      | Ad/QR attribution, qualification Flow, scoring with reasons, signed CRM webhook, rep calendar Flow, consented nurture with a coupon template, every opt-out path                                      |
-| [Clinic appointments](examples/clinic-appointments)      | `DEMO CLINIC`     | Live-slot booking Flow, consultation fee payments with refunds, reminder templates, pre-visit Flow, prescription PDFs                                                                                 |
-| [Study abroad admissions](examples/education-admissions) | `DEMO ADMISSIONS` | Course finder Flow, program carousel, document uploads, application fee, parent view, image-header intake template                                                                                    |
-| [WhatsApp Shop](examples/whatsapp-shop)                  | `DEMO SHOP`       | A D2C store: catalog and carousels, sizes, India address message, slots, UPI/COD checkout, order status, returns Flow, coupon and cart reminder                                                       |
-| [Food ordering](examples/food-ordering)                  | `DEMO FOOD`       | A cloud kitchen: nearest outlet by location, customise Flow, scheduled orders, UPI/cash, rider card and pin, table booking Flow, loyalty, one-tap reorder                                             |
+| Demo                                                     | Start code        | In one line                                                                                  | Meta features it leans on                                                                                                                                                                    |
+| -------------------------------------------------------- | ----------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Commerce**                                             |                   |                                                                                              |                                                                                                                                                                                              |
+| [WhatsApp Shop](examples/whatsapp-shop)                  | `DEMO SHOP`       | A D2C store end to end: browse, cart, address, UPI or COD, tracking, returns.                | Catalog, product and multi-product messages, product carousel, India address message, `order_details` payments, returns Flow, coupon (limited-time offer) and opt-in cart reminder templates |
+| [Food ordering](examples/food-ordering)                  | `DEMO FOOD`       | A cloud kitchen: nearest outlet, customise dishes, pay, follow the rider, book a table.      | Location request, customise Flow, scheduled orders, UPI or cash, rider location pin, table booking Flow (data exchange), reminder template                                                   |
+| [Event tickets](examples/event-tickets)                  | `DEMO EVENTS`     | Discover events, book with a Flow, pay in WhatsApp, get a QR ticket, check in at the door.   | Media carousel, attendee Flow with live pricing, payments with seat holds, QR ticket PNG and PDF, location-header reminder, web check-in                                                     |
+| **Leads and sales**                                      |                   |                                                                                              |                                                                                                                                                                                              |
+| [Real estate](examples/real-estate)                      | `DEMO HOMES`      | Property search to a booked site visit, with EMI maths and an agent hand-off.                | Data-exchange Flows (preferences, EMI, slot booking), media carousel, brochure PDFs, location, contact card, location-header template, lead-score tags                                       |
+| [Lead generation](examples/lead-generation)              | `DEMO LEADS`      | A B2B lead machine: attribution, qualification, scoring, CRM webhook, rep calendar, nurture. | Qualification Flow, calendar Flow, signed CRM webhook, contact tags, consented marketing templates with a copy-code coupon, `contact.opted_out`                                              |
+| [Study abroad admissions](examples/education-admissions) | `DEMO ADMISSIONS` | Course finder to application fee, with document uploads and a parent view.                   | Course-finder Flow, program carousel, inbound documents and photos, application fee payment, image-header intake template                                                                    |
+| **Services**                                             |                   |                                                                                              |                                                                                                                                                                                              |
+| [Clinic appointments](examples/clinic-appointments)      | `DEMO CLINIC`     | Book a doctor on live slots, pay the fee, get reminders, prescriptions and refunds.          | Slot booking Flow (data exchange), consultation payments and refunds, reminder templates, pre-visit Flow, PDF documents                                                                      |
+| [Support desk](examples/support-desk)                    | `DEMO SUPPORT`    | Self-service FAQs and order tracking, tickets with photos, agents in business hours, CSAT.   | Lists, CTA URL tracking page, inbound media, typing indicators, ticket-update template, CSAT Flow                                                                                            |
+| [Login with WhatsApp](examples/otp-login)                | `DEMO OTP`        | One-time codes in chat and on a web sign-in page, with fraud guards and sign-in alerts.      | Authentication template (copy code, one tap), `POST /v1/otp` and `/v1/otp/verify`, `otp.verified` / `otp.failed` webhooks                                                                    |
+| **Reference**                                            |                   |                                                                                              |                                                                                                                                                                                              |
+| [Hello LazyApp](examples/_template)                      | `DEMO HELLO`      | The smallest complete example; copy it to start a new demo.                                  | Reply buttons, lists, reactions, location request, a Flow, follow-ups                                                                                                                        |
+
+Send **`DEMO`** for a menu of every demo. The same list is served as JSON at `GET /demos` for the website.
 
 <!-- examples:end -->
 
@@ -134,9 +140,17 @@ expect(h.texts().at(-1)).toContain('Payment received');
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full checklist.
 
-## Deploy (demo.lazyapp.in)
+## Deploy the demo server
 
-One small VM with Node 22 is enough: a single process, SQLite on local disk.
+One small VM with Node 22.13+ is enough: a single process, SQLite on local disk, behind nginx (the files are in [`deploy/`](deploy)). The examples need a public HTTPS origin, here `https://demo.lazyapp.in`: LazyApp posts webhooks and Flow data-exchange calls to it, and WhatsApp downloads brochures and tickets from it.
+
+### 1. Prepare LazyApp
+
+- **API key** (LazyApp → Settings → API keys). The server needs `messages:send`, `messages:read`, `flows:write` (the server looks flows up with `GET /v1/flows`) and `payments:write` (clinic refunds). `npm run setup` also needs `templates:read`, `templates:write`, `webhooks:write` and `connections:write` (conversation starters, QR codes). `catalog:write` only for the shop's optional `sync-catalog`.
+- **Payments (optional)**: an active WhatsApp payment configuration on the number (India, `order_details`). Without one the shop, food, clinic, admissions and events demos fall back to a payment link through `PAYMENT_GATEWAY_ACCOUNT`, or cash, and say so in the chat.
+- **Catalog (optional)**: a Meta catalog connected to the number holding the shop's and kitchen's `retailer_id`s (`npm run sync-catalog -w @lazyapp-examples/example-whatsapp-shop`, or Commerce Manager). Without one both demos use interactive lists and media carousels.
+
+### 2. Install
 
 ```bash
 sudo useradd --system --home /srv/lazyapp-examples lazyapp-demo
@@ -149,10 +163,22 @@ sudo cp deploy/nginx.conf /etc/nginx/sites-available/demo.lazyapp.in
 sudo ln -s /etc/nginx/sites-available/demo.lazyapp.in /etc/nginx/sites-enabled/
 sudo certbot --nginx -d demo.lazyapp.in && sudo nginx -s reload
 
+sudo -u lazyapp-demo npm run setup -- --dry-run   # shows what would be created
+sudo -u lazyapp-demo npm run setup                 # templates, flows, webhook, /commands, QR codes
+# → put the printed LAZYAPP_WEBHOOK_SECRET in .env, and each flow's data-endpoint secret
+#   (LazyApp → Flows → the flow) in LAZYAPP_FLOW_SECRETS, then restart
+
 sudo cp deploy/lazyapp-demo.service /etc/systemd/system/
 sudo systemctl enable --now lazyapp-demo
 journalctl -u lazyapp-demo -f            # JSON logs, phone numbers masked
+curl -s https://demo.lazyapp.in/healthz
 ```
+
+`npm run setup` creates the webhook at `${PUBLIC_BASE_URL}/webhooks/lazyapp` subscribed to exactly the events the loaded examples handle (`message.received`, `message.failed`, `payment.captured`, `payment.failed`, `contact.opted_out`, `otp.verified`, `otp.failed`), submits every template for Meta review and publishes every Flow with its data endpoint at `${PUBLIC_BASE_URL}/flows/<example>/<flow>`. It never sets ice breakers unless you pass `--ice-breakers`: they would show to every visitor of the shared number. Meta reviews templates in minutes to hours; re-run `npm run setup -- --dry-run` to see where each one stands. The admissions intake template has an image header and is created separately with `examples/education-admissions/src/provision-intake-template.ts`.
+
+### 3. Check it
+
+Send `DEMO` from a phone: you should get the demo list. A message without a start code must get no reply and no blue ticks.
 
 Prefer pm2? `pm2 start deploy/ecosystem.config.cjs && pm2 save`. Run **one** instance: per-person ordering relies on the in-process queue.
 
@@ -178,6 +204,8 @@ Deploys are safe to do at any time: `SIGTERM` stops intake, drains the queue and
 | `DATABASE_PATH`             |          | `./data/demo.sqlite`        |                                                                      |
 | `HOST`, `PORT`, `LOG_LEVEL` |          | `127.0.0.1`, `8787`, `info` |                                                                      |
 
+Per-example settings (all optional) are documented in [`.env.example`](.env.example) and each example's README: `OTP_LOGIN_ANDROID_PACKAGE` / `OTP_LOGIN_ANDROID_SIGNATURE_HASH` (one-tap autofill), `EVENT_TICKETS_STAFF_PIN`, `REAL_ESTATE_AGENT_PHONE` / `REAL_ESTATE_REMINDERS` / `REAL_ESTATE_USE_EVENTS`, `LEADS_CRM_WEBHOOK_URL` / `LEADS_CRM_WEBHOOK_SECRET` / `LEADS_TIMING` / `LEADS_USE_EVENTS` / `LEADS_REP_PHONE`.
+
 ### HTTP endpoints
 
 | Route                        | Purpose                                                                         |
@@ -187,6 +215,7 @@ Deploys are safe to do at any time: `SIGTERM` stops intake, drains the queue and
 | `GET /healthz`               | Liveness, queue depth, loaded examples                                          |
 | `GET /demos`                 | Public catalogue: titles, start codes, Meta features, `wa.me` links             |
 | `GET, POST /x/:example/*`    | An example's own web pages (`web` routes): sign-in page, ticket files, check-in |
+| `GET /public/:example/:file` | Files an example sends by URL (brochures, guides, sample PDFs) from `public/`   |
 
 ## License
 
