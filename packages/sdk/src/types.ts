@@ -144,6 +144,8 @@ export interface Flow {
   readonly published_at: string | null;
   readonly created_at?: string | null;
   readonly can_send_message?: 'AVAILABLE' | 'LIMITED' | 'BLOCKED' | null;
+  /** Data-endpoint signing secret: returned once, when a flow with a data endpoint is created or its secret rotated. */
+  readonly endpoint_secret?: string;
 }
 
 export interface FlowDetail extends Flow {

@@ -87,6 +87,7 @@ async function main(): Promise<number> {
     commands: values.commands,
     recreateWebhook: values['recreate-webhook'],
     webhookEvents,
+    knownFlowSecrets: parseFlowSecrets(process.env.LAZYAPP_FLOW_SECRETS),
   });
 
   process.stdout.write(`${renderTable(result.rows)}\n\n${summarize(result.rows)}\n`);
@@ -95,7 +96,29 @@ async function main(): Promise<number> {
       `\nWebhook signing secret (shown once, store it now):\n\n  LAZYAPP_WEBHOOK_SECRET=${result.webhookSecret}\n\n`,
     );
   }
+  if (Object.keys(result.flowSecrets).length > 0) {
+    const merged = { ...parseFlowSecrets(process.env.LAZYAPP_FLOW_SECRETS), ...result.flowSecrets };
+    process.stdout.write(
+      `\nFlow data-endpoint secrets (shown once). Store this, restart the server, then run setup again to publish:\n\n  LAZYAPP_FLOW_SECRETS=${JSON.stringify(merged)}\n\n`,
+    );
+  }
   return result.rows.some((row) => row.status === 'failed') ? 1 : 0;
+}
+
+function parseFlowSecrets(raw: string | undefined): Record<string, string> {
+  if (raw === undefined || raw.trim() === '') {
+    return {};
+  }
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    return typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)
+      ? Object.fromEntries(
+          Object.entries(parsed).filter((entry): entry is [string, string] => typeof entry[1] === 'string'),
+        )
+      : {};
+  } catch {
+    return {};
+  }
 }
 
 main().then(

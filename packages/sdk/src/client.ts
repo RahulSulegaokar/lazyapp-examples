@@ -276,6 +276,11 @@ export class FlowsResource extends Resource {
     return this.request<Flow>('POST', `/v1/flows/${enc(uuid)}/deprecate`, options);
   }
 
+  /** Issues a new data-endpoint signing secret (returned once as `endpoint_secret`); the old one stops working. */
+  rotateEndpointSecret(uuid: string, options?: WriteOptions): Promise<Flow> {
+    return this.request<Flow>('POST', `/v1/flows/${enc(uuid)}/rotate-endpoint-secret`, options);
+  }
+
   health(uuid: string): Promise<FlowHealth> {
     return this.request<FlowHealth>('GET', `/v1/flows/${enc(uuid)}/health`);
   }

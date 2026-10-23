@@ -167,8 +167,9 @@ sudo certbot --nginx -d demo.lazyapp.in && sudo nginx -s reload
 
 sudo -u lazyapp-demo npm run setup -- --dry-run   # shows what would be created
 sudo -u lazyapp-demo npm run setup                 # templates, flows, webhook, /commands, QR codes
-# → put the printed LAZYAPP_WEBHOOK_SECRET in .env, and each flow's data-endpoint secret
-#   (LazyApp → Flows → the flow) in LAZYAPP_FLOW_SECRETS, then restart
+# → put the printed LAZYAPP_WEBHOOK_SECRET and LAZYAPP_FLOW_SECRETS in .env and restart the server,
+#   then run setup once more: data-exchange flows publish only after the server holds their secret
+#   (Meta's health check is signed with it)
 
 sudo cp deploy/lazyapp-demo.service /etc/systemd/system/
 sudo systemctl enable --now lazyapp-demo

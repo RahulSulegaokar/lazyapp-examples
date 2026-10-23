@@ -23,6 +23,8 @@ export interface SummaryRow {
 }
 
 export interface ProvisionOptions {
+  /** Secrets already configured (LAZYAPP_FLOW_SECRETS); flows missing from it get a fresh secret. */
+  readonly knownFlowSecrets?: Readonly<Record<string, string>> | undefined;
   readonly api: LazyAppClient;
   readonly examples: readonly AnyExample[];
   /** Public origin of the demo server, e.g. `https://demo.lazyapp.in`. */
@@ -46,6 +48,8 @@ export interface ProvisionResult {
   readonly rows: readonly SummaryRow[];
   /** Set when a webhook endpoint was created: the signing secret, shown once by LazyApp. */
   readonly webhookSecret: string | null;
+  /** Data-endpoint secrets issued during this run, keyed `<exampleId>/<flowKey>` (merge into LAZYAPP_FLOW_SECRETS). */
+  readonly flowSecrets: Readonly<Record<string, string>>;
   readonly connection: Connection | null;
 }
 
@@ -72,13 +76,14 @@ export async function provision(options: ProvisionOptions): Promise<ProvisionRes
   });
 
   await provisionTemplates(options, add);
-  await provisionFlows(options, publicBaseUrl, add);
+  const flowSecrets: Record<string, string> = {};
+  await provisionFlows(options, publicBaseUrl, add, flowSecrets);
   const webhookSecret = await provisionWebhook(options, publicBaseUrl, connection, add);
   if (connection !== null) {
     await provisionStarters(options, connection, add);
     await provisionQrCodes(options, connection, add);
   }
-  return { rows, webhookSecret, connection };
+  return { rows, webhookSecret, flowSecrets, connection };
 }
 
 async function pickConnection(
@@ -181,6 +186,7 @@ async function provisionFlows(
   options: ProvisionOptions,
   publicBaseUrl: string,
   add: (row: SummaryRow) => void,
+  flowSecrets: Record<string, string>,
 ): Promise<void> {
   const existing = new Map<string, Flow>();
   for await (const flow of paginate((cursor) => options.api.flows.list({ limit: 100, cursor }))) {
@@ -212,7 +218,14 @@ async function provisionFlows(
             continue;
           }
           const created = await options.api.flows.create(input, { idempotencyKey: `setup-flow-${name}` });
-          const published = publish
+          if (spec.dataExchange && created.endpoint_secret !== undefined) {
+            flowSecrets[`${example.id}/${spec.key}`] = created.endpoint_secret;
+          }
+          // A data-exchange flow publishes only once the server holds its secret: Meta's health check must verify.
+          const canPublish =
+            publish &&
+            (!spec.dataExchange || options.knownFlowSecrets?.[`${example.id}/${spec.key}`] !== undefined);
+          const published = canPublish
             ? await options.api.flows.publish(created.uuid, { idempotencyKey: `setup-flow-${name}-publish` })
             : created;
           add({
@@ -234,7 +247,16 @@ async function provisionFlows(
             continue;
           }
           await options.api.flows.update(flow.uuid, input);
-          if (publish) {
+          const secretKey = `${example.id}/${spec.key}`;
+          if (spec.dataExchange && options.knownFlowSecrets?.[secretKey] === undefined) {
+            const rotated = await options.api.flows.rotateEndpointSecret(flow.uuid, {
+              idempotencyKey: `setup-flow-${name}-secret-${flow.uuid}`,
+            });
+            if (rotated.endpoint_secret !== undefined) {
+              flowSecrets[secretKey] = rotated.endpoint_secret;
+            }
+          }
+          if (publish && (!spec.dataExchange || options.knownFlowSecrets?.[secretKey] !== undefined)) {
             await options.api.flows.publish(flow.uuid, {
               idempotencyKey: `setup-flow-${name}-publish-${flow.uuid}`,
             });
@@ -265,14 +287,17 @@ async function provisionFlows(
         add({ example: example.id, resource: 'flow', name, status: 'failed', detail: errorDetail(error) });
         continue;
       }
-      if (spec.dataExchange) {
+      const secretKey = `${example.id}/${spec.key}`;
+      if (spec.dataExchange && options.knownFlowSecrets?.[secretKey] === undefined) {
         add({
           example: example.id,
           resource: 'flow',
-          name: `${example.id}/${spec.key}`,
+          name: secretKey,
           status: 'action needed',
           detail:
-            'Copy the flow signing secret from LazyApp → Flows into LAZYAPP_FLOW_SECRETS (not exposed by the API)',
+            flowSecrets[secretKey] === undefined
+              ? 'No signing secret yet: re-run setup after the flow exists'
+              : 'Add the printed LAZYAPP_FLOW_SECRETS, restart the server, then re-run setup to publish',
         });
       }
     }
