@@ -15,39 +15,86 @@
           "items": {
             "type": "object",
             "properties": {
-              "id": { "type": "string" },
-              "title": { "type": "string" },
-              "description": { "type": "string" }
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
             }
           },
           "__example__": [
-            { "id": "indiranagar", "title": "Indiranagar", "description": "80 Feet Road, HAL 2nd Stage" }
+            {
+              "id": "indiranagar",
+              "title": "Indiranagar",
+              "description": "80 Feet Road, HAL 2nd Stage"
+            }
           ]
         },
         "dates": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": { "id": { "type": "string" }, "title": { "type": "string" } }
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
           },
-          "__example__": [{ "id": "2026-10-24", "title": "Tomorrow, Sat 24 Oct" }]
+          "__example__": [
+            {
+              "id": "2026-10-24",
+              "title": "Tomorrow, Sat 24 Oct"
+            }
+          ]
         },
         "parties": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": { "id": { "type": "string" }, "title": { "type": "string" } }
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
           },
-          "__example__": [{ "id": "2", "title": "2 guests" }]
+          "__example__": [
+            {
+              "id": "2",
+              "title": "2 guests"
+            }
+          ]
         },
-        "error": { "type": "string", "__example__": "" },
-        "has_error": { "type": "boolean", "__example__": false }
+        "error": {
+          "type": "string",
+          "__example__": "That time just filled up. Please pick another slot."
+        },
+        "has_error": {
+          "type": "boolean",
+          "__example__": false
+        }
       },
       "layout": {
         "type": "SingleColumnLayout",
         "children": [
-          { "type": "TextSubheading", "text": "Dine in at Masala Mile" },
-          { "type": "TextCaption", "text": "${data.error}", "visible": "${data.has_error}" },
+          {
+            "type": "TextSubheading",
+            "text": "Dine in at Masala Mile"
+          },
+          {
+            "type": "TextCaption",
+            "text": "${data.error}",
+            "visible": "${data.has_error}"
+          },
           {
             "type": "Dropdown",
             "name": "outlet",
@@ -91,38 +138,87 @@
       "terminal": true,
       "success": true,
       "data": {
-        "summary": { "type": "string", "__example__": "Indiranagar · Tomorrow, Sat 24 Oct · 4 guests" },
+        "summary": {
+          "type": "string",
+          "__example__": "Indiranagar · Tomorrow, Sat 24 Oct · 4 guests"
+        },
         "times": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "id": { "type": "string" },
-              "title": { "type": "string" },
-              "description": { "type": "string" }
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
             }
           },
-          "__example__": [{ "id": "19:30", "title": "7:30 pm", "description": "Dinner" }]
+          "__example__": [
+            {
+              "id": "19:30",
+              "title": "7:30 pm",
+              "description": "Dinner"
+            }
+          ]
         },
         "occasions": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": { "id": { "type": "string" }, "title": { "type": "string" } }
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
           },
-          "__example__": [{ "id": "birthday", "title": "Birthday" }]
+          "__example__": [
+            {
+              "id": "birthday",
+              "title": "Birthday"
+            }
+          ]
         },
-        "outlet": { "type": "string", "__example__": "indiranagar" },
-        "date": { "type": "string", "__example__": "2026-10-24" },
-        "party": { "type": "string", "__example__": "4" },
-        "error": { "type": "string", "__example__": "" },
-        "has_error": { "type": "boolean", "__example__": false }
+        "outlet": {
+          "type": "string",
+          "__example__": "indiranagar"
+        },
+        "date": {
+          "type": "string",
+          "__example__": "2026-10-24"
+        },
+        "party": {
+          "type": "string",
+          "__example__": "4"
+        },
+        "error": {
+          "type": "string",
+          "__example__": "That time just filled up. Please pick another slot."
+        },
+        "has_error": {
+          "type": "boolean",
+          "__example__": false
+        }
       },
       "layout": {
         "type": "SingleColumnLayout",
         "children": [
-          { "type": "TextSubheading", "text": "${data.summary}" },
-          { "type": "TextCaption", "text": "${data.error}", "visible": "${data.has_error}" },
+          {
+            "type": "TextSubheading",
+            "text": "${data.summary}"
+          },
+          {
+            "type": "TextCaption",
+            "text": "${data.error}",
+            "visible": "${data.has_error}"
+          },
           {
             "type": "RadioButtonsGroup",
             "name": "time",

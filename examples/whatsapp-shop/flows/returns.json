@@ -10,15 +10,24 @@
       "id": "RETURN",
       "title": "Return or exchange",
       "data": {
-        "order_label": { "type": "string", "__example__": "Order IL482913 · delivered 21 Oct" },
+        "order_label": {
+          "type": "string",
+          "__example__": "Order IL482913 · delivered 21 Oct"
+        },
         "items": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "id": { "type": "string" },
-              "title": { "type": "string" },
-              "description": { "type": "string" }
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
             }
           },
           "__example__": [
@@ -33,26 +42,63 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": { "id": { "type": "string" }, "title": { "type": "string" } }
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
           },
-          "__example__": [{ "id": "size", "title": "Size doesn't fit" }]
+          "__example__": [
+            {
+              "id": "size",
+              "title": "Size doesn't fit"
+            }
+          ]
         },
         "sizes": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": { "id": { "type": "string" }, "title": { "type": "string" } }
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
           },
-          "__example__": [{ "id": "L", "title": "L" }]
+          "__example__": [
+            {
+              "id": "L",
+              "title": "L"
+            }
+          ]
         },
-        "error": { "type": "string", "__example__": "" },
-        "has_error": { "type": "boolean", "__example__": false }
+        "error": {
+          "type": "string",
+          "__example__": "Please choose an item to return."
+        },
+        "has_error": {
+          "type": "boolean",
+          "__example__": false
+        }
       },
       "layout": {
         "type": "SingleColumnLayout",
         "children": [
-          { "type": "TextSubheading", "text": "${data.order_label}" },
-          { "type": "TextCaption", "text": "${data.error}", "visible": "${data.has_error}" },
+          {
+            "type": "TextSubheading",
+            "text": "${data.order_label}"
+          },
+          {
+            "type": "TextCaption",
+            "text": "${data.error}",
+            "visible": "${data.has_error}"
+          },
           {
             "type": "RadioButtonsGroup",
             "name": "item",
@@ -122,20 +168,50 @@
       "terminal": true,
       "success": true,
       "data": {
-        "summary": { "type": "string", "__example__": "Return Bandhani maxi dress, red (M)" },
-        "outcome": { "type": "string", "__example__": "Refund of ₹1,899 to your UPI after pickup" },
-        "pickup": { "type": "string", "__example__": "Pickup on Mon, 26 Oct between 10 am and 6 pm" },
-        "item": { "type": "string", "__example__": "il-dress-bandhani-red" },
-        "kind": { "type": "string", "__example__": "return" },
-        "reason": { "type": "string", "__example__": "size" },
-        "new_size": { "type": "string", "__example__": "" }
+        "summary": {
+          "type": "string",
+          "__example__": "Return Bandhani maxi dress, red (M)"
+        },
+        "outcome": {
+          "type": "string",
+          "__example__": "Refund of ₹1,899 to your UPI after pickup"
+        },
+        "pickup": {
+          "type": "string",
+          "__example__": "Pickup on Mon, 26 Oct between 10 am and 6 pm"
+        },
+        "item": {
+          "type": "string",
+          "__example__": "il-dress-bandhani-red"
+        },
+        "kind": {
+          "type": "string",
+          "__example__": "return"
+        },
+        "reason": {
+          "type": "string",
+          "__example__": "size"
+        },
+        "new_size": {
+          "type": "string",
+          "__example__": "M"
+        }
       },
       "layout": {
         "type": "SingleColumnLayout",
         "children": [
-          { "type": "TextHeading", "text": "${data.summary}" },
-          { "type": "TextBody", "text": "${data.outcome}" },
-          { "type": "TextBody", "text": "${data.pickup}" },
+          {
+            "type": "TextHeading",
+            "text": "${data.summary}"
+          },
+          {
+            "type": "TextBody",
+            "text": "${data.outcome}"
+          },
+          {
+            "type": "TextBody",
+            "text": "${data.pickup}"
+          },
           {
             "type": "TextCaption",
             "text": "Keep the item unused with its tags on. The courier checks it at pickup."
