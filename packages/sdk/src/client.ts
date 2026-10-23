@@ -2,6 +2,7 @@ import { HttpTransport } from './http.js';
 import type { HttpMethod, RequestEvent, RequestOptions } from './http.js';
 import type { InteractiveMessage, OutboundMessage, SendOptions, TemplateSend } from './messages.js';
 import type {
+  AutomationPackResult,
   CatalogProductPage,
   Capability,
   CommerceSettings,
@@ -11,10 +12,14 @@ import type {
   ConversationStarters,
   CreateAuthenticationTemplateInput,
   CreatedWebhookEndpoint,
+  CreateEmbedTokenInput,
   CreateFlowInput,
   CreatePaymentInput,
+  CreatePlatformCustomerInput,
+  CreateSetupLinkInput,
   CreateTemplateInput,
   CreateWebhookInput,
+  EmbedToken,
   Flow,
   FlowDetail,
   FlowHealth,
@@ -26,12 +31,16 @@ import type {
   PaymentConfiguration,
   PaymentOrder,
   PaymentStatus,
+  PlatformCustomer,
+  PlatformCustomerUsage,
+  ProvisionAutomationPackInput,
   QrCode,
   ReadReceipt,
   ScheduledMessageAccepted,
   SendEventInput,
   SendOtpInput,
   SentMessage,
+  SetupLink,
   Template,
   UpsertContactInput,
   WebhookEndpoint,
@@ -61,6 +70,17 @@ export interface WriteOptions {
   readonly signal?: AbortSignal | undefined;
 }
 
+/** Acting for a platform customer with a platform key: sent as `X-LazyApp-Customer`. */
+export interface CustomerScope {
+  /** The customer's `cus_…` id, uuid or your `external_id`. Needs `customers:act` or `customers:write`. */
+  readonly customer?: string | undefined;
+}
+
+/** `X-LazyApp-Customer` for a call made on a platform customer's behalf. */
+export function customerHeaders(customer: string | undefined): Readonly<Record<string, string>> | undefined {
+  return customer === undefined ? undefined : { 'X-LazyApp-Customer': customer };
+}
+
 const enc = encodeURIComponent;
 
 /**
@@ -85,6 +105,8 @@ export class LazyAppClient {
   readonly events: EventsResource;
   readonly otp: OtpResource;
   readonly capabilities: CapabilitiesResource;
+  readonly platform: PlatformResource;
+  readonly automationPacks: AutomationPacksResource;
 
   private readonly http: HttpTransport;
 
@@ -117,6 +139,8 @@ export class LazyAppClient {
     this.events = new EventsResource(request);
     this.otp = new OtpResource(request);
     this.capabilities = new CapabilitiesResource(request);
+    this.platform = new PlatformResource(request);
+    this.automationPacks = new AutomationPacksResource(request);
   }
 
   /** Escape hatch for endpoints without a typed method. Same retries and errors. */
@@ -469,5 +493,101 @@ export class OtpResource extends Resource {
 export class CapabilitiesResource extends Resource {
   list(): Promise<{ readonly data: readonly Capability[] }> {
     return this.request('GET', '/v1/capabilities');
+  }
+}
+
+/**
+ * The Platform API: one isolated workspace per customer of your product. Needs a key on a
+ * platform workspace with `customers:write`.
+ *
+ * @see https://lazyapp.in/docs/platform/overview
+ */
+export class PlatformResource extends Resource {
+  readonly customers: PlatformCustomersResource;
+  readonly setupLinks: SetupLinksResource;
+  readonly embedTokens: EmbedTokensResource;
+
+  constructor(request: Requester) {
+    super(request);
+    this.customers = new PlatformCustomersResource(request);
+    this.setupLinks = new SetupLinksResource(request);
+    this.embedTokens = new EmbedTokensResource(request);
+  }
+}
+
+export class PlatformCustomersResource extends Resource {
+  /** `GET /v1/platform/customers`, optionally filtered by your `external_id`. */
+  list(
+    params: ListParams & { readonly external_id?: string | undefined } = {},
+  ): Promise<Page<PlatformCustomer>> {
+    return this.request<Page<PlatformCustomer>>('GET', '/v1/platform/customers', { query: params });
+  }
+
+  /** The customer with this `external_id`, or null. */
+  async findByExternalId(externalId: string): Promise<PlatformCustomer | null> {
+    const page = await this.list({ external_id: externalId, limit: 1 });
+    return page.data.find((customer) => customer.external_id === externalId) ?? null;
+  }
+
+  create(input: CreatePlatformCustomerInput, options?: WriteOptions): Promise<PlatformCustomer> {
+    return this.request<PlatformCustomer>('POST', '/v1/platform/customers', { body: input, ...options });
+  }
+
+  /** `id` is the `cus_…` public id. */
+  get(id: string): Promise<PlatformCustomer> {
+    return this.request<PlatformCustomer>('GET', `/v1/platform/customers/${enc(id)}`);
+  }
+
+  /** Erases the customer's workspace. Irreversible: prefer `archive` for real customers. */
+  delete(id: string): Promise<undefined> {
+    return this.request<undefined>('DELETE', `/v1/platform/customers/${enc(id)}`);
+  }
+
+  archive(id: string, options?: WriteOptions): Promise<PlatformCustomer> {
+    return this.request<PlatformCustomer>('POST', `/v1/platform/customers/${enc(id)}/archive`, options);
+  }
+
+  /** Usage for a billing period (`YYYY-MM`, default this month). */
+  usage(id: string, params: { readonly period?: string | undefined } = {}): Promise<PlatformCustomerUsage> {
+    return this.request<PlatformCustomerUsage>('GET', `/v1/platform/customers/${enc(id)}/usage`, {
+      query: params,
+    });
+  }
+}
+
+export class SetupLinksResource extends Resource {
+  /** The response's `url` and `token` are secrets: hand them to the customer, never log them. */
+  create(input: CreateSetupLinkInput, options?: WriteOptions): Promise<SetupLink> {
+    return this.request<SetupLink>('POST', '/v1/platform/setup-links', { body: input, ...options });
+  }
+
+  revoke(id: string): Promise<undefined> {
+    return this.request<undefined>('DELETE', `/v1/platform/setup-links/${enc(id)}`);
+  }
+}
+
+export class EmbedTokensResource extends Resource {
+  /** Mint per page view, server-side, with a short expiry and your origins only. */
+  create(input: CreateEmbedTokenInput, options?: WriteOptions): Promise<EmbedToken> {
+    return this.request<EmbedToken>('POST', '/v1/platform/embed-tokens', { body: input, ...options });
+  }
+
+  revoke(id: string): Promise<undefined> {
+    return this.request<undefined>('DELETE', `/v1/platform/embed-tokens/${enc(id)}`);
+  }
+}
+
+export class AutomationPacksResource extends Resource {
+  /** `PUT /v1/automation-packs/provision`: event mappings, workflows and flows for a vertical. */
+  provision(
+    input: ProvisionAutomationPackInput,
+    options: WriteOptions & CustomerScope = {},
+  ): Promise<AutomationPackResult> {
+    return this.request<AutomationPackResult>('PUT', '/v1/automation-packs/provision', {
+      body: input,
+      idempotencyKey: options.idempotencyKey,
+      signal: options.signal,
+      headers: customerHeaders(options.customer),
+    });
   }
 }

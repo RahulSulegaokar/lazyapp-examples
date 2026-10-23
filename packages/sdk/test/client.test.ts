@@ -226,3 +226,40 @@ describe('paginate', () => {
     expect(items).toEqual([1, 2, 3]);
   });
 });
+
+describe('platform', () => {
+  it('finds a customer by external_id and reads usage for a period', async () => {
+    const { lazyapp, calls } = client([
+      json(200, { data: [{ id: 'cus_1', external_id: 'salon-1', name: 'Glow' }], next_cursor: null }),
+      json(200, { totals: { messages: 3, totalCharge: '1.20', currency: 'INR' } }),
+    ]);
+
+    const customer = await lazyapp.platform.customers.findByExternalId('salon-1');
+    const usage = await lazyapp.platform.customers.usage('cus_1', { period: '2026-10' });
+
+    expect(customer?.id).toBe('cus_1');
+    expect(calls[0]?.url.pathname).toBe('/v1/platform/customers');
+    expect(Object.fromEntries(calls[0]!.url.searchParams)).toEqual({ external_id: 'salon-1', limit: '1' });
+    expect(calls[1]?.url.pathname).toBe('/v1/platform/customers/cus_1/usage');
+    expect(calls[1]?.url.searchParams.get('period')).toBe('2026-10');
+    expect(usage.totals?.messages).toBe(3);
+  });
+
+  it('acts for a customer with X-LazyApp-Customer and never lets a header replace the key', async () => {
+    const { lazyapp, calls } = client([
+      json(200, { event_mappings: { created: 2, skipped: 0 } }),
+      json(200, { data: [] }),
+    ]);
+
+    await lazyapp.automationPacks.provision(
+      { pack: 'real_estate' },
+      { customer: 'salon-1', idempotencyKey: 'pack-1' },
+    );
+    await lazyapp.request('GET', '/v1/contacts', { headers: { authorization: 'Bearer stolen' } });
+
+    expect(calls[0]?.method).toBe('PUT');
+    expect(calls[0]?.headers.get('x-lazyapp-customer')).toBe('salon-1');
+    expect(calls[0]?.headers.get('idempotency-key')).toBe('pack-1');
+    expect(calls[1]?.headers.get('authorization')).toBe('Bearer sk_test_123');
+  });
+});

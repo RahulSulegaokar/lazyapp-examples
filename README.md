@@ -1,6 +1,6 @@
 # LazyApp examples
 
-Production-grade WhatsApp apps built on the [LazyApp](https://lazyapp.in) API: a storefront, food ordering, real estate, lead generation and more, each one a full end-to-end conversation using the Meta features a real business would use (catalogs, Flows, India payments, address forms, templates, carousels…).
+Production-grade WhatsApp apps built on the [LazyApp](https://lazyapp.in) API: a storefront, food ordering, real estate, lead generation, a multi-tenant SaaS and more, each one a full end-to-end conversation using the Meta features a real business would use (catalogs, Flows, India payments, address forms, templates, carousels…).
 
 Every example runs on one shared WhatsApp number behind one small server, and every example is a typed, fully tested state machine you can copy into your own product.
 
@@ -24,6 +24,8 @@ Every example runs on one shared WhatsApp number behind one small server, and ev
 | [Clinic appointments](examples/clinic-appointments)      | `DEMO CLINIC`     | Book a doctor on live slots, pay the fee, get reminders, prescriptions and refunds.          | Slot booking Flow (data exchange), consultation payments and refunds, reminder templates, pre-visit Flow, PDF documents                                                                      |
 | [Support desk](examples/support-desk)                    | `DEMO SUPPORT`    | Self-service FAQs and order tracking, tickets with photos, agents in business hours, CSAT.   | Lists, CTA URL tracking page, inbound media, typing indicators, ticket-update template, CSAT Flow                                                                                            |
 | [Login with WhatsApp](examples/otp-login)                | `DEMO OTP`        | One-time codes in chat and on a web sign-in page, with fraud guards and sign-in alerts.      | Authentication template (copy code, one tap), `POST /v1/otp` and `/v1/otp/verify`, `otp.verified` / `otp.failed` webhooks                                                                    |
+| **Platforms**                                            |                   |                                                                                              |                                                                                                                                                                                              |
+| [Build your own WhatsApp SaaS](examples/platform-saas)   | `DEMO PLATFORM`   | SalonBook, a fictional SaaS, onboards salons as LazyApp customers with their own numbers.    | Embedded Signup setup links, embedded inbox/templates/usage, per-customer usage, webhooks with the customer envelope, `X-LazyApp-Customer`, reply buttons, list, CTA URL                     |
 | **Reference**                                            |                   |                                                                                              |                                                                                                                                                                                              |
 | [Hello LazyApp](examples/_template)                      | `DEMO HELLO`      | The smallest complete example; copy it to start a new demo.                                  | Reply buttons, lists, reactions, location request, a Flow, follow-ups                                                                                                                        |
 
@@ -85,7 +87,7 @@ deploy/             nginx, systemd and pm2 files for demo.lazyapp.in
 You need Node **22.13+**, a LazyApp workspace with a connected WhatsApp number, and an API key.
 
 ```bash
-git clone https://github.com/Meavita-Global/lazyapp-examples && cd lazyapp-examples
+git clone https://github.com/RahulSulegaokar/lazyapp-examples && cd lazyapp-examples
 npm ci
 cp .env.example .env              # add LAZYAPP_API_KEY and PUBLIC_BASE_URL
 
@@ -154,7 +156,7 @@ One small VM with Node 22.13+ is enough: a single process, SQLite on local disk,
 
 ```bash
 sudo useradd --system --home /srv/lazyapp-examples lazyapp-demo
-sudo git clone https://github.com/Meavita-Global/lazyapp-examples /srv/lazyapp-examples
+sudo git clone https://github.com/RahulSulegaokar/lazyapp-examples /srv/lazyapp-examples
 cd /srv/lazyapp-examples && sudo npm ci --omit=dev
 sudo install -o lazyapp-demo -m 600 .env.example .env    # then fill it in
 sudo install -d -o lazyapp-demo data
@@ -204,7 +206,7 @@ Deploys are safe to do at any time: `SIGTERM` stops intake, drains the queue and
 | `DATABASE_PATH`             |          | `./data/demo.sqlite`        |                                                                      |
 | `HOST`, `PORT`, `LOG_LEVEL` |          | `127.0.0.1`, `8787`, `info` |                                                                      |
 
-Per-example settings (all optional) are documented in [`.env.example`](.env.example) and each example's README: `OTP_LOGIN_ANDROID_PACKAGE` / `OTP_LOGIN_ANDROID_SIGNATURE_HASH` (one-tap autofill), `EVENT_TICKETS_STAFF_PIN`, `REAL_ESTATE_AGENT_PHONE` / `REAL_ESTATE_REMINDERS` / `REAL_ESTATE_USE_EVENTS`, `LEADS_CRM_WEBHOOK_URL` / `LEADS_CRM_WEBHOOK_SECRET` / `LEADS_TIMING` / `LEADS_USE_EVENTS` / `LEADS_REP_PHONE`.
+Per-example settings (all optional) are documented in [`.env.example`](.env.example) and each example's README: `OTP_LOGIN_ANDROID_PACKAGE` / `OTP_LOGIN_ANDROID_SIGNATURE_HASH` (one-tap autofill), `EVENT_TICKETS_STAFF_PIN`, `REAL_ESTATE_AGENT_PHONE` / `REAL_ESTATE_REMINDERS` / `REAL_ESTATE_USE_EVENTS`, `LEADS_CRM_WEBHOOK_URL` / `LEADS_CRM_WEBHOOK_SECRET` / `LEADS_TIMING` / `LEADS_USE_EVENTS` / `LEADS_REP_PHONE`, `PLATFORM_SAAS_API_KEY` / `PLATFORM_SAAS_WEBHOOK_SECRET` / `PLATFORM_SAAS_BOOK_CALL_URL` / `PLATFORM_SAAS_AUTOMATION_PACK` (the platform demo uses its own `sk_test_` key on a platform workspace).
 
 ### HTTP endpoints
 

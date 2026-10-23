@@ -92,6 +92,14 @@ export const WEBHOOK_EVENT_TYPES = [
   'campaign.completed',
   'campaign.failed',
   'conversion.detected',
+  'customer.created',
+  'customer.updated',
+  'customer.connected',
+  'customer.suspended',
+  'customer.archived',
+  'customer.deleted',
+  'customer.usage_alert',
+  'setup_link.failed',
 ] as const;
 
 export type WebhookEventType = (typeof WEBHOOK_EVENT_TYPES)[number];
@@ -185,6 +193,29 @@ const envelopeSchema = z.looseObject({
 });
 
 export type WebhookEnvelope = z.infer<typeof envelopeSchema>;
+
+/**
+ * The platform customer an event came from (`customer` on the envelope). Present on every event
+ * that originated in a platform customer's workspace, delivered to the platform's endpoints.
+ */
+export interface WebhookCustomer {
+  readonly id: string;
+  readonly external_id: string | null;
+  readonly name: string | null;
+}
+
+/** The `customer` envelope of a platform delivery, or null for the workspace's own events. */
+export function webhookCustomer(event: WebhookEnvelope): WebhookCustomer | null {
+  const customer = event.customer;
+  if (customer === null || customer === undefined || typeof customer.id !== 'string' || customer.id === '') {
+    return null;
+  }
+  return {
+    id: customer.id,
+    external_id: customer.external_id ?? null,
+    name: typeof customer.name === 'string' ? customer.name : null,
+  };
+}
 
 export class WebhookPayloadError extends Error {
   constructor(message: string, options?: { cause?: unknown }) {

@@ -7,6 +7,8 @@ export interface ApiCall {
   readonly query: Readonly<Record<string, string>>;
   readonly body: unknown;
   readonly idempotencyKey: string | null;
+  /** `X-LazyApp-Customer`, when the call acted for a platform customer. */
+  readonly customer: string | null;
 }
 
 export interface FakeResponse {
@@ -78,6 +80,7 @@ export class FakeLazyApp {
       query: Object.fromEntries(url.searchParams.entries()),
       body: typeof init?.body === 'string' ? (JSON.parse(init.body) as unknown) : undefined,
       idempotencyKey: headers.get('idempotency-key'),
+      customer: headers.get('x-lazyapp-customer'),
     };
     this.calls.push(call);
     for (const route of this.routes) {

@@ -17,6 +17,11 @@ export interface RequestOptions {
    */
   readonly idempotencyKey?: string | undefined;
   readonly signal?: AbortSignal | undefined;
+  /**
+   * Extra request headers, e.g. `X-LazyApp-Customer` to act for a platform customer.
+   * `Authorization`, `Idempotency-Key` and the content headers cannot be overridden.
+   */
+  readonly headers?: Readonly<Record<string, string>> | undefined;
   /** Overrides the client's default timeout for this call. */
   readonly timeoutMs?: number | undefined;
 }
@@ -58,6 +63,7 @@ export class HttpTransport {
     const idempotencyKey =
       options.idempotencyKey ?? (IDEMPOTENT_METHODS.has(method) ? undefined : randomUUID());
     const headers: Record<string, string> = {
+      ...extraHeaders(options.headers),
       Authorization: `Bearer ${this.options.apiKey}`,
       Accept: 'application/json',
       'User-Agent': this.options.userAgent,
@@ -164,6 +170,21 @@ export class HttpTransport {
       error: event.error,
     });
   }
+}
+
+const RESERVED_HEADERS = new Set([
+  'authorization',
+  'idempotency-key',
+  'content-type',
+  'accept',
+  'user-agent',
+]);
+
+/** Caller-supplied headers minus the ones the transport owns (compared case-insensitively). */
+function extraHeaders(headers: Readonly<Record<string, string>> | undefined): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(headers ?? {}).filter(([name]) => !RESERVED_HEADERS.has(name.toLowerCase())),
+  );
 }
 
 async function decodeBody(response: Response): Promise<unknown> {

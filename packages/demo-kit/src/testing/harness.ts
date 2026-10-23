@@ -236,9 +236,17 @@ export class Harness<S> {
     };
   }
 
-  /** Delivers any webhook event (payment.captured, message.failed…) through the runtime. */
-  async event(type: string, data: Record<string, unknown>): Promise<RouteOutcome> {
+  /**
+   * Delivers any webhook event (payment.captured, message.failed…) through the runtime.
+   * `envelope` adds top-level fields, e.g. a platform `customer`.
+   */
+  async event(
+    type: string,
+    data: Record<string, unknown>,
+    envelope: Partial<Pick<WebhookEnvelope, 'customer' | 'test'>> = {},
+  ): Promise<RouteOutcome> {
     const event: WebhookEnvelope = {
+      ...envelope,
       id: `evt_${++this.sequence}`,
       type,
       created_at: new Date(this.nowMs).toISOString(),

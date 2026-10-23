@@ -5,6 +5,7 @@ import {
   LazyAppNetworkError,
   LazyAppNotFoundError,
   LazyAppRefusalError,
+  webhookCustomer,
 } from '@lazyapp-examples/sdk';
 import type { LazyAppClient, WebhookEnvelope, WebhookEventType } from '@lazyapp-examples/sdk';
 import { CommandParser } from './commands.js';
@@ -154,6 +155,11 @@ export class DemoRouter {
   }
 
   async handle(event: WebhookEnvelope): Promise<RouteOutcome> {
+    // A platform customer's own number (e.g. a salon onboarded in the platform demo), not the
+    // shared demo number: its people never started a demo, so nothing here may answer them.
+    if (webhookCustomer(event) !== null) {
+      return { status: 'ignored', reason: 'event from a platform customer workspace' };
+    }
     if (isEventType(event, 'message.received')) {
       const inbound = toInbound(event.data.message);
       return inbound === null

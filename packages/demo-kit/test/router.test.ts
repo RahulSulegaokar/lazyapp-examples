@@ -47,6 +47,30 @@ describe('hard rule 1: silent for people who did not start a demo', () => {
     expect(h.calls).toHaveLength(0);
   });
 
+  it("never answers a platform customer's own number, even with a start code", async () => {
+    const h = setup();
+    await h.user.send('DEMO COUNT');
+    h.clear();
+    const message = {
+      uuid: 'in_salon',
+      direction: 'inbound',
+      type: 'text',
+      from: h.user.phone,
+      to: '+918000000000',
+      body: 'DEMO COUNT',
+      content: { text: { body: 'DEMO COUNT' } },
+    };
+
+    const outcome = await h.event(
+      'message.received',
+      { message },
+      { customer: { id: 'cus_1', external_id: 'salon-1', name: 'Glow Studio' } },
+    );
+
+    expect(outcome).toEqual({ status: 'ignored', reason: 'event from a platform customer workspace' });
+    expect(h.calls).toHaveLength(0);
+  });
+
   it('ignores group messages and our own outbound echoes', async () => {
     const h = setup();
     await h.user.send('DEMO COUNT');

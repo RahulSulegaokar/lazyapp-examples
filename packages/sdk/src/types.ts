@@ -429,3 +429,155 @@ export interface OtpVerification {
   readonly status: string;
   readonly verified_at?: string | null;
 }
+
+// --- Platform (customers, setup links, embed tokens) ------------------------------
+
+export type PlatformBillingMode = 'inherit' | 'prepaid' | 'postpaid';
+
+/** A platform customer: one isolated workspace per customer of your product (`cus_…`). */
+export interface PlatformCustomer {
+  /** Public id, `cus_…`. */
+  readonly id: string;
+  readonly uuid?: string;
+  /** Your own id for them; `X-LazyApp-Customer` accepts it too. */
+  readonly external_id: string | null;
+  readonly name: string;
+  readonly email?: string | null;
+  /** `active`, `suspended`, `archived`. */
+  readonly status: string;
+  readonly billing_mode: PlatformBillingMode;
+  readonly metadata?: Readonly<Record<string, unknown>> | null;
+  readonly spending_limit_cents?: number | null;
+  readonly wallet_balance_cents?: number;
+  readonly usage_alert_cents?: number | null;
+  readonly created_at?: string | null;
+  readonly connections?: readonly PlatformCustomerConnection[];
+  /** This month's light summary. `total_charge` is a decimal string. */
+  readonly usage?: {
+    readonly period: string;
+    readonly messages: number;
+    readonly total_charge: string | number;
+  };
+}
+
+export interface PlatformCustomerConnection {
+  readonly uuid: string;
+  readonly phone_number_id: string | null;
+  readonly display_phone_number: string | null;
+  readonly verified_name?: string | null;
+  readonly status: string;
+  readonly mode?: string;
+  readonly is_default?: boolean;
+}
+
+export interface CreatePlatformCustomerInput {
+  readonly name: string;
+  readonly external_id?: string;
+  readonly email?: string;
+  readonly billing_mode?: PlatformBillingMode;
+  readonly metadata?: Readonly<Record<string, unknown>>;
+  readonly spending_limit_cents?: number;
+  readonly usage_alert_cents?: number;
+}
+
+/**
+ * `GET /v1/platform/customers/{customer}/usage`. LazyApp returns its usage analytics for the
+ * period (`totals`, `byCategory`, `daily`…) plus the billing fields; older docs describe a
+ * `data: { period, messages, total_charge }` wrapper. Both are typed so callers can read either.
+ */
+export interface PlatformCustomerUsage {
+  readonly totals?: {
+    readonly messages?: number;
+    readonly freeMessages?: number;
+    readonly paidMessages?: number;
+    /** Decimal string in `currency`. */
+    readonly totalCharge?: string;
+    readonly currency?: string;
+  };
+  readonly byCategory?: readonly {
+    readonly category: string | null;
+    readonly messages: number;
+    readonly totalCharge?: string;
+  }[];
+  readonly data?: {
+    readonly period?: string;
+    readonly messages?: number;
+    readonly total_charge?: string | number;
+  };
+  readonly billing_mode?: PlatformBillingMode;
+  readonly wallet_balance_cents?: number | null;
+  readonly spending_limit_cents?: number | null;
+}
+
+export interface CreateSetupLinkInput {
+  /** Customer public id (`cus_…`). */
+  readonly customer_id: string;
+  /** 1–90. */
+  readonly expires_in_days?: number;
+  readonly use_policy?: 'single' | 'multi';
+  readonly max_uses?: number;
+  readonly allowed_connection_type?: 'new' | 'reconnect' | 'either';
+  readonly redirect_url?: string;
+  readonly locale?: string;
+  readonly success_webhook_url?: string;
+  readonly failure_webhook_url?: string;
+  readonly template_set?: string;
+}
+
+/** A setup link (`set_…`). `url` and `token` carry the secret: never log them. */
+export interface SetupLink {
+  readonly id: string;
+  readonly customer_id: string;
+  readonly url?: string;
+  readonly token?: string;
+  readonly expires_at: string | null;
+  readonly use_policy: 'single' | 'multi';
+  readonly use_count: number;
+  readonly max_uses?: number | null;
+  readonly allowed_connection_type: 'new' | 'reconnect' | 'either';
+  readonly redirect_url?: string | null;
+  readonly revoked_at?: string | null;
+  readonly usable: boolean;
+}
+
+export type EmbedComponent = 'connection' | 'inbox' | 'messages' | 'templates' | 'usage';
+
+export interface CreateEmbedTokenInput {
+  readonly customer_id: string;
+  readonly component: EmbedComponent;
+  /** 5–10080. */
+  readonly expires_in_minutes?: number;
+  /** Origins allowed to frame the component, e.g. `https://app.example`. */
+  readonly origin_allowlist?: readonly string[];
+  readonly phone_number_id?: string;
+  readonly locale?: string;
+}
+
+/** An embed token (`emb_…`). `url` and `token` are bearer secrets: never log them. */
+export interface EmbedToken {
+  readonly id: string;
+  readonly component: EmbedComponent;
+  readonly url: string;
+  readonly token: string;
+  readonly expires_at: string | null;
+}
+
+export interface ProvisionAutomationPackInput {
+  /** Pack key, e.g. `real_estate`. */
+  readonly pack: string;
+  readonly include_events?: boolean;
+  readonly include_workflows?: boolean;
+  readonly include_flows?: boolean;
+}
+
+interface ProvisionCounts {
+  readonly created: number;
+  readonly skipped: number;
+  readonly updated?: number;
+}
+
+export interface AutomationPackResult {
+  readonly event_mappings?: ProvisionCounts;
+  readonly workflows?: ProvisionCounts;
+  readonly flows?: ProvisionCounts;
+}
